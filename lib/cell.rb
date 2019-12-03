@@ -1,4 +1,7 @@
-#A cell
+#A cell that is initialized with a set of coordinates, without a ship
+# and that it hasn't been fired upon
+#Methods allow for a ship to be passed into the cell, and be fired upon
+# which effects the ship class that is passed into it.
 
 
 class Cell
@@ -19,6 +22,7 @@ class Cell
     @ship = ship
   end
 
+  #Only added this because the interaction pattern requests it has a method
   def fired_upon?
     @fired_upon
   end
