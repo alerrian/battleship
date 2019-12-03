@@ -1,9 +1,13 @@
 require_relative 'test_helper'
 require_relative '../lib/board'
+require_relative '../lib/ship'
+
 
 class BoardTest < Minitest::Test
   def setup
     @board = Board.new
+    @cruiser = Ship.new("Cruiser", 3)
+    @submarine = Ship.new("Submarine", 2)
   end
 
   def test_a_board_is_a_board
@@ -16,11 +20,32 @@ class BoardTest < Minitest::Test
   end
 
   def test_that_coordinates_are_valid
-    
+
     assert_equal true, @board.validate_coordinates?("A1")
     assert_equal true, @board.validate_coordinates?("D4")
     assert_equal false, @board.validate_coordinates?("A5")
     assert_equal false, @board.validate_coordinates?("E1")
     assert_equal false, @board.validate_coordinates?("A22")
   end
+
+  def test_ship_and_placement_array_same_size
+    cruiser_placement = ["A1", "A2"]
+    submarine_placement = ["A2", "A3", "A4"]
+
+    assert_equal false, @board.valid_placement?(@cruiser, cruiser_placement)
+    assert_equal false, @board.valid_placement?(@submarine, submarine_placement)
+  end
+
+  def test_ship_placement_is_in_consecutive_cells
+    #Consecutive based on interaction pattern
+    cruiser_placement = ["A1", "A2", "A4"]
+    submarine_placement = ["A1", "C1"]
+    cruiser_placement2 = ["A2", "A3", "A4"]
+
+    assert_equal false, @board.valid_placement?(@cruiser, cruiser_placement)
+    assert_equal false, @board.valid_placement?(@submarine, submarine_placement)
+    assert_equal true, @board.valid_placement?(@cruiser, cruiser_placement2)
+  end
+
+
 end
