@@ -36,8 +36,14 @@ class Board
   end
 
   def valid_placement?(ship, ship_placement)
-    return false if ship_placement.length != ship.ship_length
-
-    return false if ship_placement != @cells.keys.index[(@cells.keys.index(ship_placement[0]))..(ship_placement.length)]
+    #   range = Math.sqrt(@cells.keys.length)
+    start_point = @cells.keys.index(ship_placement[0])
+    if ship_placement.length != ship.ship_length or
+                                ship_placement !=
+                                @cells.keys.slice((start_point), (ship_placement.length))
+      return false
+    else
+      return true
+    end
   end
 end

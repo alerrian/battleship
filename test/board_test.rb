@@ -40,9 +40,11 @@ class BoardTest < Minitest::Test
     #Consecutive based on interaction pattern
     cruiser_placement = ["A1", "A2", "A4"]
     submarine_placement = ["A1", "C1"]
+    cruiser_placement2 = ["A2", "A3", "A4"]
 
     assert_equal false, @board.valid_placement?(@cruiser, cruiser_placement)
     assert_equal false, @board.valid_placement?(@submarine, submarine_placement)
+    assert_equal true, @board.valid_placement?(@cruiser, cruiser_placement2)
   end
 
 
