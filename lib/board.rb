@@ -34,4 +34,10 @@ class Board
   def validate_coordinates?(coordinate)
     @cells.keys.include?(coordinate)
   end
+
+  def valid_placement?(ship, ship_placement)
+    return false if ship_placement.length != ship.ship_length
+
+    return false if ship_placement != @cells.keys.index[(@cells.keys.index(ship_placement[0]))..(ship_placement.length)]
+  end
 end
