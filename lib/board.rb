@@ -3,11 +3,15 @@ require './lib/cell'
 # Creates the board to play the game
 
 class Board
+  attr_reader :cells
+
   def initialize
-    
+    # keeps cells method from overwriting the board
+    # each time it is called.
+    @cells = cell_generator
   end
 
-  def cells
+  def cell_generator
     cell_range = ("A".."D").to_a
     hash_keys = []
     cells = {}
@@ -25,5 +29,9 @@ class Board
     sorted_hash = cells.sort_by { |k, v| k }
 
     sorted_hash.to_h
+  end
+
+  def validate_coordinates?(coordinate)
+    @cells.keys.include?(coordinate)
   end
 end
