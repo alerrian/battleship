@@ -103,4 +103,14 @@ class Game
 
     valid_coords[position_index]
   end
+
+  def turn_board_render
+    print "\n=============COMPUTER BOARD=============\n\n"
+
+    cpu.render(true)
+
+    print "\n==============PLAYER BOARD==============\n\n"
+
+    player.render(true)
+  end
 end
