@@ -93,7 +93,5 @@ class Board
     ship_coords.each do |coord|
       @cells[coord].place_ship(ship)
     end
-
-    #This method will loop for each ship in the game
   end
 end
