@@ -102,5 +102,17 @@ class Board
     #render method.  It will pass an argument of true to display player
     #ships on their board
     #CHALLENGES - Iteration with breaks for new lines
+    range = Math.sqrt(@cells.length)
+    render_array = @cells.values.each_slice(range).to_a
+
+    render_array.each do |row|
+      print row[0].coordinate.split(//)[0] + " "
+
+      row.each do |cell|
+        print cell.render(player) + " "
+      end
+
+      print "\n"
+    end
   end
 end

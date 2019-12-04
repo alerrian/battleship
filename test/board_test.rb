@@ -55,11 +55,6 @@ class BoardTest < Minitest::Test
     assert_equal false, @board.valid_placement?(@cruiser, ["A4", "B1", "B2"])
   end
 
-<<<<<<< HEAD
-  def test_for_valid_placements
-    assert_equal true, @board.valid_placement?(@submarine, ["A1", "A2"])
-    assert_equal true, @board.valid_placement?(@cruiser, ["B1", "C1", "D1"])
-=======
   def test_can_place_vertical
     assert_equal true, @board.valid_placement?(@cruiser, ["A4", "B4", "C4"])
   end
@@ -70,7 +65,6 @@ class BoardTest < Minitest::Test
 
   def test_verticals_all_in_one_column
     assert_equal false, @board.valid_placement?(@cruiser, ["C1", "D1", "A2"])
->>>>>>> f76aa81664f18bcfa2b767964af4042caa0e6723
   end
 
   def test_ship_can_be_placed_in_cells
