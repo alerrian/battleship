@@ -3,13 +3,11 @@ require './lib/cell'
 # Creates the board to play the game
 
 class Board
-  attr_reader :cells, :raw_cells
+  attr_reader :cells, :raw_cells_keys
 
   def initialize
-    # keeps cells method from overwriting the board
-    # each time it is called.
-    @raw_cells = cell_generator
-    @cells = sort_cells
+    @raw_cells_keys = []
+    @cells = cell_generator
   end
 
   def cell_generator
@@ -27,11 +25,9 @@ class Board
       cells[key] = Cell.new(key)
     end
 
-    cells
-  end
+    @raw_cells_keys = cells.keys
 
-  def sort_cells
-    sorted_hash = @raw_cells.sort_by { |k, v| k }
+    sorted_hash = cells.sort_by { |k, v| k }
 
     sorted_hash.to_h
   end
@@ -52,8 +48,8 @@ class Board
       ship_placement == @cells.keys.slice((start_point), (ship_placement.length))
     #When false the raw_cells is used which is order based on number A1, B1, C1 etc
     elsif horizontal_input?(ship_placement) == false
-      start_point = @raw_cells.keys.index(ship_placement[0])
-      ship_placement == @raw_cells.keys.slice((start_point), (ship_placement.length))
+      start_point = @raw_cells_keys.index(ship_placement[0])
+      ship_placement == @raw_cells_keys.slice((start_point), (ship_placement.length))
     else
       false
     end
