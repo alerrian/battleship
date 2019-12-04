@@ -20,7 +20,6 @@ class BoardTest < Minitest::Test
   end
 
   def test_that_coordinates_are_valid
-
     assert_equal true, @board.validate_coordinates?("A1")
     assert_equal true, @board.validate_coordinates?("D4")
     assert_equal false, @board.validate_coordinates?("A5")
@@ -56,9 +55,50 @@ class BoardTest < Minitest::Test
     assert_equal false, @board.valid_placement?(@cruiser, ["A4", "B1", "B2"])
   end
 
+<<<<<<< HEAD
   def test_for_valid_placements
     assert_equal true, @board.valid_placement?(@submarine, ["A1", "A2"])
     assert_equal true, @board.valid_placement?(@cruiser, ["B1", "C1", "D1"])
+=======
+  def test_can_place_vertical
+    assert_equal true, @board.valid_placement?(@cruiser, ["A4", "B4", "C4"])
   end
 
+  def test_cannot_place_vertical_nonconsecutive_cells
+    assert_equal false, @board.valid_placement?(@cruiser, ["A4", "B4", "D4"])
+  end
+
+  def test_verticals_all_in_one_column
+    assert_equal false, @board.valid_placement?(@cruiser, ["C1", "D1", "A2"])
+>>>>>>> f76aa81664f18bcfa2b767964af4042caa0e6723
+  end
+
+  def test_ship_can_be_placed_in_cells
+    @board.place(@cruiser, ["A1", "A2", "A3"])
+
+    assert_instance_of Cell, @board.cells["A1"]
+    assert_instance_of Cell, @board.cells["A2"]
+    assert_instance_of Cell, @board.cells["A3"]
+    assert_equal @cruiser, @board.cells["A1"].ship
+    assert_equal @cruiser, @board.cells["A2"].ship
+    assert_equal @cruiser, @board.cells["A3"].ship
+    assert @board.cells["A1"].ship == @board.cells["A3"].ship
+  end
+
+  def test_that_ships_cannot_overlap
+    @board.place(@cruiser, ["A1", "A2", "A3"])
+
+    assert_equal false, @board.place(@submarine, ["A1", "B1"])
+  end
+
+  def test_that_two_ships_can_be_placed
+    @board.place(@cruiser, ["A1", "B1", "C1"])
+    @board.place(@submarine, ["B2", "B3"])
+
+    assert_equal @cruiser, @board.cells["A1"].ship
+    assert_equal @cruiser, @board.cells["B1"].ship
+    assert_equal @cruiser, @board.cells["C1"].ship
+    assert_equal @submarine, @board.cells["B2"].ship
+    assert_equal @submarine, @board.cells["B3"].ship
+  end
 end
