@@ -3,12 +3,12 @@ require_relative '../lib/ship'
 
 class Game
   attr_reader :cpu, :player
-
   
-
   def initialize
     @cpu = Board.new
     @player = Board.new
+    @cpu_shots = []
+    @player_shots = []
   end
 
   def start
@@ -30,6 +30,9 @@ class Game
 
   def cpu_placement
     # logic for ship placement
+    #   gen random array
+    #     until place == true
+    #       gen random array
     # creates and places ships on hidden board
     puts "I have placed my ships on the grid"
     puts "You now need to lay out your two ships."
