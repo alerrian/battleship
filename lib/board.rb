@@ -51,9 +51,11 @@ class Board
       #Slice pulls an array out from the SP to a certain distance
       ship_placement == @cells.keys.slice((start_point), (ship_placement.length))
     #When false the raw_cells is used which is order based on number A1, B1, C1 etc
-    else
+    elsif horizontal_input?(ship_placement) == false
       start_point = @raw_cells.keys.index(ship_placement[0])
       ship_placement == @raw_cells.keys.slice((start_point), (ship_placement.length))
+    else
+      false
     end
   end
 

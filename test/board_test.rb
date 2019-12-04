@@ -20,7 +20,6 @@ class BoardTest < Minitest::Test
   end
 
   def test_that_coordinates_are_valid
-
     assert_equal true, @board.validate_coordinates?("A1")
     assert_equal true, @board.validate_coordinates?("D4")
     assert_equal false, @board.validate_coordinates?("A5")
@@ -62,5 +61,9 @@ class BoardTest < Minitest::Test
 
   def test_cannot_place_vertical_nonconsecutive_cells
     assert_equal false, @board.valid_placement?(@cruiser, ["A4", "B4", "D4"])
+  end
+
+  def test_verticals_all_in_one_column
+    assert_equal false, @board.valid_placement?(@cruiser, ["C1", "D1", "A2"])
   end
 end
