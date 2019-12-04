@@ -41,8 +41,13 @@ class Board
     #Need second guard clause for previous ship placement
     #test cell.ship !=nil return false  (Looping guard statement)
     ship_coords.each do |coord|
+      return false if validate_coordinates?(coord) == false
+    end
+
+    ship_coords.each do |coord|
       return false if @cells[coord].ship != nil
     end
+
     return false if ship_coords.length != ship.ship_length
 
     #If the method returns true use the sorted cells A1, A2, A3 etc

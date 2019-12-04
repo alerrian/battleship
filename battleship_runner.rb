@@ -12,6 +12,9 @@ end
 
 if user_in == "p"
   # start game
+  new_game = Game.new
+
+  new_game.start
 elsif user_in == "q"
   # quit game
   exit
