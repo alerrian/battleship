@@ -53,7 +53,12 @@ class BoardTest < Minitest::Test
   end
 
   def test_cannot_place_A4_to_B1
-    assert_equal false, @board.validate_placement?(@cruiser, ["A4", "B1", "B2"])
+    assert_equal false, @board.valid_placement?(@cruiser, ["A4", "B1", "B2"])
+  end
+
+  def test_can_place_vertical
+    assert_equal true, @board.valid_placement?(@cruiser, ["A4", "B4", "C4"])
+
   end
 
 end
