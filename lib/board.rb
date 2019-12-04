@@ -40,6 +40,9 @@ class Board
     #Guard clause for placement size for the ship placement
     #Need second guard clause for previous ship placement
     #test cell.ship !=nil return false  (Looping guard statement)
+    ship_coords.each do |coord|
+      return false if @cells[coord].ship != nil
+    end
     return false if ship_coords.length != ship.ship_length
 
     #If the method returns true use the sorted cells A1, A2, A3 etc
@@ -83,9 +86,13 @@ class Board
     #First thing is a guard statement that from valid_placement? method
     #return false if valid_placement? is false (used later for looping until user input
     # is valid)
+    return false if valid_placement?(ship, ship_coords) == false
 
     #Past the guard statement we are going to call cells from the hash that match
     #ship_coords and then call each of those .place_ship methods to bring in the ship
+    ship_coords.each do |coord|
+      @cells[coord].place_ship(ship)
+    end
 
     #This method will loop for each ship in the game
   end
