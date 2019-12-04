@@ -23,6 +23,8 @@ class Game
   end
 
   def turn
+    turn_board_render
+
   end
 
   def end_game
@@ -35,7 +37,7 @@ class Game
     #       gen random array
     # creates and places ships on hidden board
     puts "I have placed my ships on the grid"
-    puts "You now need to lay out your two ships."
+    print "You now need to lay out your two ships.\n\n"
   end
 
   def player_placement
@@ -71,6 +73,16 @@ class Game
       user_coords = gets.chomp.upcase.split
       puts ""
     end
+
+    player.render(true)
+  end
+
+  def turn_board_render
+    print "\n=============COMPUTER BOARD=============\n\n"
+
+    cpu.render
+
+    print "\n==============PLAYER BOARD==============\n\n"
 
     player.render(true)
   end
