@@ -3,7 +3,7 @@ require_relative '../lib/ship'
 
 class Game
   attr_reader :cpu, :player
-  
+
   def initialize
     @cpu = Board.new
     @player = Board.new
@@ -14,7 +14,7 @@ class Game
   def start
     # cpu places ships on board
     cpu_placement
-    
+
     # player places ships on board
     player_placement
 
@@ -31,6 +31,18 @@ class Game
   end
 
   def cpu_placement
+    cpu_ships = []
+    cruiser = Ship.new("Cruiser", 3)
+    submarine = Ship.new("Submarine", 2)
+    cpu_ships.push(cruiser)
+    cpu_ships.push(submarine)
+
+    cpu_ships.each do |ship|
+      coords = get_valid_positions(ship)
+      @cpu.place(ship, coords)
+    end
+
+    @cpu.render(true)
     # logic for ship placement
     #   gen random array
     #     until place == true
@@ -42,7 +54,7 @@ class Game
 
   def player_placement
     print "The Cruiser is three units long and the Submarine is two units long.\n\n"
-    
+
     # Print empty board
     player.render
 
@@ -75,5 +87,20 @@ class Game
     end
 
     player.render(true)
+  end
+
+  def get_valid_positions(ship)
+    all_coords = @cpu.cells.keys.each_cons(ship.ship_length).to_a
+    vert_coords = @cpu.raw_cells_keys.each_cons(ship.ship_length).to_a
+    vert_coords.each do |array|
+      all_coords.push(array)
+    end
+    valid_coords = all_coords.find_all do |coord_section|
+      @cpu.valid_placement?(ship, coord_section)
+    end
+
+    position_index = rand(0..(valid_coords.length))
+
+    valid_coords[position_index]
   end
 end
