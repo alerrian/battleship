@@ -8,6 +8,8 @@ class Board
   def initialize
     @raw_cells_keys = []
     @cells = cell_generator
+    @v_valid = false
+    @h_valid = false
   end
 
   def cell_generator
@@ -95,10 +97,27 @@ class Board
     end
   end
 
+  # :nocov:
   def render(player = false)
     #This method needs to iterate through the hash of cells calling their
     #render method.  It will pass an argument of true to display player
     #ships on their board
     #CHALLENGES - Iteration with breaks for new lines
+    range = Math.sqrt(@cells.length)
+    render_array = @cells.values.each_slice(range).to_a
+
+    print "  1 2 3 4 \n"
+
+    render_array.each do |row|
+      print row[0].coordinate.split(//)[0] + " "
+
+      row.each do |cell|
+        print cell.render(player) + " "
+      end
+
+      print "\n"
+    end
   end
+  # :nocov:
+
 end

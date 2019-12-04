@@ -39,7 +39,7 @@ class BoardTest < Minitest::Test
     #Consecutive based on interaction pattern
     cruiser_placement = ["A1", "A2", "A4"]
     submarine_placement = ["A1", "C1"]
-    cruiser_placement2 = ["A2", "A3", "A4"]
+    cruiser_placement2 = ["A1", "A2", "A3"]
 
     assert_equal false, @board.valid_placement?(@cruiser, cruiser_placement)
     assert_equal false, @board.valid_placement?(@submarine, submarine_placement)
@@ -88,11 +88,12 @@ class BoardTest < Minitest::Test
   def test_that_two_ships_can_be_placed
     @board.place(@cruiser, ["A1", "B1", "C1"])
     @board.place(@submarine, ["B2", "B3"])
-
+    
     assert_equal @cruiser, @board.cells["A1"].ship
     assert_equal @cruiser, @board.cells["B1"].ship
     assert_equal @cruiser, @board.cells["C1"].ship
     assert_equal @submarine, @board.cells["B2"].ship
     assert_equal @submarine, @board.cells["B3"].ship
   end
+
 end
