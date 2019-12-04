@@ -94,4 +94,11 @@ class Board
       @cells[coord].place_ship(ship)
     end
   end
+
+  def render(player = false)
+    #This method needs to iterate through the hash of cells calling their
+    #render method.  It will pass an argument of true to display player
+    #ships on their board
+    #CHALLENGES - Iteration with breaks for new lines
+  end
 end
