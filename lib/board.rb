@@ -43,13 +43,13 @@ class Board
     return false if ship_coords.length != ship.ship_length
 
     #If the method returns true use the sorted cells A1, A2, A3 etc
-    if horizontal_input?(ship_coords)
+    if align_verified?(ship_coords)
       #SP is the index position in the keys array for the first inputed position
       start_point = @cells.keys.index(ship_coords[0])
       #Slice pulls an array out from the SP to a certain distance
       ship_coords == @cells.keys.slice((start_point), (ship_coords.length))
     #When false the raw_cells is used which is order based on number A1, B1, C1 etc
-    elsif horizontal_input?(ship_coords) == false
+    elsif align_verified?(ship_coords) == false
       start_point = @raw_cells_keys.index(ship_coords[0])
       ship_coords == @raw_cells_keys.slice((start_point), (ship_coords.length))
     else
@@ -59,7 +59,7 @@ class Board
 
 #This method is used to check if the input is for horizontal or
 #vertical placement
-  def horizontal_input?(ship_coords)
+  def align_verified?(ship_coords)
     #Pull out the Letters of the coordinate only
     horizontal_check = ship_coords.map do |letter|
       letter.split(//)[0]
