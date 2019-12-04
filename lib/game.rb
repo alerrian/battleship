@@ -76,14 +76,4 @@ class Game
 
     player.render(true)
   end
-
-  def turn_board_render
-    print "\n=============COMPUTER BOARD=============\n\n"
-
-    cpu.render
-
-    print "\n==============PLAYER BOARD==============\n\n"
-
-    player.render(true)
-  end
 end
