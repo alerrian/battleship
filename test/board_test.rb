@@ -66,4 +66,22 @@ class BoardTest < Minitest::Test
   def test_verticals_all_in_one_column
     assert_equal false, @board.valid_placement?(@cruiser, ["C1", "D1", "A2"])
   end
+
+  def test_ship_can_be_placed_in_cells
+    @board.place(@cruiser, ["A1", "A2", "A3"])
+
+    assert_instance_of Cell, @board.cells["A1"]
+    assert_instance_of Cell, @board.cells["A2"]
+    assert_instance_of Cell, @board.cells["A3"]
+    assert_equal @cruiser, @board.cells["A1"].ship
+    assert_equal @cruiser, @board.cells["A2"].ship
+    assert_equal @cruiser, @board.cells["A3"].ship
+    assert @board.cells["A1"].ship == @board.cells["A3"].ship
+  end
+
+  def test_that_ships_cannot_overlap
+    @board.place(@cruiser, ["A1", "A2", "A3"])
+
+    assert_equal false, @board.valid_placement?(@submarine, ["A1", "B1"])
+  end
 end
