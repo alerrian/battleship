@@ -25,6 +25,39 @@ class Game
   def turn
     turn_board_render
 
+    print "Enter the coordinate for your shot: "
+    user_in = gets.chomp.upcase
+    puts ""
+
+    # run the game until either players ships are all sunk
+    until (@p_cruiser.sunk? && @p_submarine.sunk?) || (@c_cruiser.sunk? && @c_submarine.sunk?)
+      unless cpu.validate_coordinates?(user_in) && !(@player_shots.include?(user_in))
+        print "Please enter a valid coordinate: "
+        user_in = gets.chomp.upcase
+        puts ""
+      end
+
+      cpu.cells[user_in].fire_upon
+
+      @player_shots.push(user_in)
+
+      print "My shot! \n\n"
+      
+
+      cpu_shot = @cpu.raw_cells_keys.sample
+      @player.cells[cpu_shot].fire_upon
+      print cpu_shot
+
+      unless !@cpu_shots.include?(cpu_shot)
+        @player.cells[cpu_shot].fire_upon
+        @cpu_shots.push(cpu_shot)
+        print cpu_shot
+      end
+
+      turn_board_render
+    end
+    
+    end_game
   end
 
   def end_game
@@ -32,10 +65,10 @@ class Game
 
   def cpu_placement
     cpu_ships = []
-    cruiser = Ship.new("Cruiser", 3)
-    submarine = Ship.new("Submarine", 2)
-    cpu_ships.push(cruiser)
-    cpu_ships.push(submarine)
+    @c_cruiser = Ship.new("Cruiser", 3)
+    @c_submarine = Ship.new("Submarine", 2)
+    cpu_ships.push(@c_cruiser)
+    cpu_ships.push(@c_submarine)
 
     cpu_ships.each do |ship|
       coords = get_valid_positions(ship)
@@ -59,13 +92,13 @@ class Game
     player.render
 
     print "\nEnter the squares for the CRUISER: "
-    cruiser = Ship.new(cruiser, 3)
+    @p_cruiser = Ship.new("Cruiser", 3)
     user_coords = gets.chomp.upcase.split
     puts ""
 
     # take in coordinates and place them on game board.
     # refresh board for each ship
-    while player.place(cruiser, user_coords) == false
+    while player.place(@p_cruiser, user_coords) == false
       print "Please enter valid coordinates(a1 b1 c1): "
       user_coords = gets.chomp.upcase.split
       puts ""
@@ -74,13 +107,13 @@ class Game
     player.render(true)
 
     print "\nEnter the squares for the SUBMARINE: "
-    submarine = Ship.new(submarine, 2)
+    @p_submarine = Ship.new("Submarine", 2)
     user_coords = gets.chomp.upcase.split
     puts ""
 
     # take in coordinates and place them on game board.
     # refresh board for each ship
-    while player.place(submarine, user_coords) == false
+    while player.place(@p_submarine, user_coords) == false
       print "Please enter valid coordinates(a1 b1 c1): "
       user_coords = gets.chomp.upcase.split
       puts ""
@@ -99,7 +132,7 @@ class Game
       @cpu.valid_placement?(ship, coord_section)
     end
 
-    position_index = rand(0..(valid_coords.length))
+    position_index = rand(0..(valid_coords.length - 1))
 
     valid_coords[position_index]
   end
