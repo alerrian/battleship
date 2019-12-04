@@ -88,11 +88,12 @@ class BoardTest < Minitest::Test
   def test_that_two_ships_can_be_placed
     @board.place(@cruiser, ["A1", "B1", "C1"])
     @board.place(@submarine, ["B2", "B3"])
-
+    
     assert_equal @cruiser, @board.cells["A1"].ship
     assert_equal @cruiser, @board.cells["B1"].ship
     assert_equal @cruiser, @board.cells["C1"].ship
     assert_equal @submarine, @board.cells["B2"].ship
     assert_equal @submarine, @board.cells["B3"].ship
   end
+
 end
