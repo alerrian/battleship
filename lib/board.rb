@@ -38,46 +38,6 @@ class Board
     @cells.keys.include?(coordinate)
   end
 
-<<<<<<< HEAD
-  def valid_placement?(ship, ship_placement)
-    return false if ship.ship_length != ship_placement.length
-
-    if check_vertical(ship_placement) != 1
-      if check_horizontal(ship_placement) == 1
-        check_consecutive(ship, ship_placement) ? true : false
-      else
-        false
-      end
-    else
-      false
-    end
-  end
-
-  def check_horizontal(ship_placement)
-    horizontal_check = ship_placement.map do |value|
-      value.split(//)[0]
-    end
-
-    horizontal_check.uniq.length
-  end
-
-  def check_vertical(ship_placement)
-    vertical_check = ship_placement.map do |value|
-      value.split(//)[1]
-    end
-
-    vertical_check.uniq.length
-  end
-
-  def check_consecutive(ship, ship_placement)
-    start_point = @cells.keys.index(ship_placement[0])
-    if ship_placement.length == ship.ship_length and
-                                ship_placement ==
-                                @cells.keys.slice((start_point), (ship_placement.length))
-      true
-    else
-      false
-=======
   def valid_placement?(ship, ship_coords)
     #Guard clause for placement size for the ship placement
     #Need second guard clause for previous ship placement
@@ -114,7 +74,6 @@ class Board
     #Pull out the number of the coordinate only
     vertical_check = ship_coords.map do |letter|
       letter.split(//)[1]
->>>>>>> f76aa81664f18bcfa2b767964af4042caa0e6723
     end
     #remove all duplicates - Correct vert placement should be in one column (1, 2, 3, etc)
     vertical_check.uniq!
