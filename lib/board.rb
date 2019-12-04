@@ -105,6 +105,8 @@ class Board
     range = Math.sqrt(@cells.length)
     render_array = @cells.values.each_slice(range).to_a
 
+    print "  1 2 3 4 \n"
+    
     render_array.each do |row|
       print row[0].coordinate.split(//)[0] + " "
 
