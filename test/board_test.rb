@@ -58,7 +58,9 @@ class BoardTest < Minitest::Test
 
   def test_can_place_vertical
     assert_equal true, @board.valid_placement?(@cruiser, ["A4", "B4", "C4"])
-
   end
 
+  def test_cannot_place_vertical_nonconsecutive_cells
+    assert_equal false, @board.valid_placement?(@cruiser, ["A4", "B4", "D4"])
+  end
 end

@@ -8,8 +8,8 @@ class Board
   def initialize
     # keeps cells method from overwriting the board
     # each time it is called.
-    @cells = cell_generator
-    @raw_cells = {}
+    @raw_cells = cell_generator
+    @cells = sort_cells
   end
 
   def cell_generator
@@ -27,9 +27,11 @@ class Board
       cells[key] = Cell.new(key)
     end
 
-    @raw_cells = cells
+    cells
+  end
 
-    sorted_hash = cells.sort_by { |k, v| k }
+  def sort_cells
+    sorted_hash = @raw_cells.sort_by { |k, v| k }
 
     sorted_hash.to_h
   end
@@ -39,30 +41,18 @@ class Board
   end
 
   def valid_placement?(ship, ship_placement)
-    
+    return false if ship_placement.length != ship.ship_length
+
+    if horizontal_input?(ship_placement)
+      start_point = @cells.keys.index(ship_placement[0])
+      ship_placement == @cells.keys.slice((start_point), (ship_placement.length))
+    else
+      start_point = @raw_cells.keys.index(ship_placement[0])
+      ship_placement == @raw_cells.keys.slice((start_point), (ship_placement.length))
+    end
   end
 
-  # def valid_placement?(ship, ship_placement)
-  #   require "pry"; binding.pry
-  #   range = Math.sqrt(@cells.keys.length)
-  #   start_point = @cells.keys.index(ship_placement[0])
-  #   if hor_and_vert_check(ship_placement)
-  #     if ship_placement.length == ship.ship_length
-  #       if ship_placement == @cells.keys.slice((start_point), (ship_placement.length)) or
-  #         (ship_placement == @cells.keys.step((start_point), range))
-  #         true
-  #       else
-  #         false
-  #       end
-  #     else
-  #       false
-  #     end
-  #   else
-  #     false
-  #   end
-  # end
-
-  def hor_and_vert_check(ship_placement)
+  def horizontal_input?(ship_placement)
     horizontal_check = ship_placement.map do |letter|
       letter.split(//)[0]
     end
@@ -71,9 +61,9 @@ class Board
       letter.split(//)[1]
     end
     vertical_check.uniq!
-    if horizontal_check.length == 1 or vertical_check.length == 1
+    if horizontal_check.length == 1
       true
-    else
+    elsif vertical_check.length == 1
       false
     end
   end
