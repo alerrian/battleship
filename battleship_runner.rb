@@ -1,4 +1,4 @@
-require_relative '/lib/game'
+require_relative './lib/game'
 
 p "Welcome to BATTLESHIP"
 p "Enter p to play. Enter q to quit."

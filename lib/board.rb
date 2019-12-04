@@ -8,8 +8,6 @@ class Board
   def initialize
     @raw_cells_keys = []
     @cells = cell_generator
-    @v_valid = false
-    @h_valid = false
   end
 
   def cell_generator
