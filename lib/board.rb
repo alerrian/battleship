@@ -60,8 +60,8 @@ class Board
     end
   end
 
-#This method is used to check if the input is for horizontal or
-#vertical placement
+  #This method is used to check if the input is for horizontal or
+  #vertical placement
   def align_verified?(ship_coords)
     #Pull out the Letters of the coordinate only
     horizontal_check = ship_coords.map do |letter|
