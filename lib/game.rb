@@ -55,5 +55,20 @@ class Game
     end
 
     player.render(true)
+
+    print "\nEnter the squares for the SUBMARINE: "
+    submarine = Ship.new(submarine, 2)
+    user_coords = gets.chomp.upcase.split
+    puts ""
+
+    # take in coordinates and place them on game board.
+    # refresh board for each ship
+    while player.place(submarine, user_coords) == false
+      print "Please enter valid coordinates(a1 b1 c1): "
+      user_coords = gets.chomp.upcase.split
+      puts ""
+    end
+
+    player.render(true)
   end
 end
