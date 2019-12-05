@@ -41,6 +41,8 @@ class Cell
   def render(player = false)
     if player == true && @ship != nil && @fired_upon == false
       return @symbol = "S"
+    elsif @ship != nil && @ship.sunk? == true
+      return @symbol = "X"
     end
     return @symbol
   end

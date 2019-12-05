@@ -42,11 +42,9 @@ class Game
       @player_shots.push(user_in)
 
       print "My shot! \n\n"
-      
+
 
       cpu_shot = @cpu.raw_cells_keys.sample
-      @player.cells[cpu_shot].fire_upon
-      print cpu_shot
 
       unless !@cpu_shots.include?(cpu_shot)
         @player.cells[cpu_shot].fire_upon
@@ -56,11 +54,16 @@ class Game
 
       turn_board_render
     end
-    
+
     end_game
   end
 
   def end_game
+    if @p_cruiser.sunk? && @p_submarine.sunk?
+      puts "I won!"
+    else
+      puts "You won!"
+    end
   end
 
   def cpu_placement
