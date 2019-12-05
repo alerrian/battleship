@@ -16,13 +16,13 @@ class Board
     if game_type == "D"
       range = ("A".."D").to_a
     else
-      range = ("A".."J").to_a
+      range = ("A".."I").to_a
     end
     hash_keys = []
     cells = {}
 
     range.length.times do |num|
-      cell_range.each do |letter|
+      range.each do |letter|
         hash_keys.push(letter + (num + 1).to_s)
       end
     end
@@ -46,15 +46,7 @@ class Board
     #Guard clause for placement size for the ship placement
     #Need second guard clause for previous ship placement
     #test cell.ship !=nil return false  (Looping guard statement)
-    ship_coords.each do |coord|
-      return false if validate_coordinates?(coord) == false
-    end
-
-    ship_coords.each do |coord|
-      return false if @cells[coord].ship != nil
-    end
-
-    return false if ship_coords.length != ship.ship_length
+    return false if pass_valid_guards?(ship, ship_coords) == false
 
     #If the method returns true use the sorted cells A1, A2, A3 etc
     if align_verified?(ship_coords)
@@ -107,7 +99,7 @@ class Board
   end
 
   # :nocov:
-  def render(player = false, game_type)
+  def render(player = false)
     #This method needs to iterate through the hash of cells calling their
     #render method.  It will pass an argument of true to display player
     #ships on their board
@@ -115,10 +107,10 @@ class Board
     range = Math.sqrt(@cells.length)
     render_array = @cells.values.each_slice(range).to_a
 
-    if game_type == "D"
+    if @game_type == "D"
       print "  1 2 3 4 \n"
     else
-      print "  1 2 3 4 5 6 7 8 9 10 \n"
+      print "  1 2 3 4 5 6 7 8 9 \n"
     end
 
     render_array.each do |row|
@@ -133,4 +125,16 @@ class Board
   end
   # :nocov:
 
+  def pass_valid_guards?(ship, ship_coords)
+    ship_coords.each do |coord|
+      return false if validate_coordinates?(coord) == false
+    end
+
+    ship_coords.each do |coord|
+      return false if @cells[coord].ship != nil
+    end
+
+    return false if ship_coords.length != ship.ship_length
+    true
+  end
 end
