@@ -23,34 +23,20 @@ class Game
   end
 
   def turn
+    system("clear")
+    
     turn_board_render
 
     print "Enter the coordinate for your shot: "
-    user_in = gets.chomp.upcase
-    puts ""
+    player_shot = gets.chomp.upcase
+
+    cpu_shot = @cpu.raw_cells_keys.sample
 
     # run the game until either players ships are all sunk
     until (@p_cruiser.sunk? && @p_submarine.sunk?) || (@c_cruiser.sunk? && @c_submarine.sunk?)
-      unless cpu.validate_coordinates?(user_in) && !(@player_shots.include?(user_in))
-        print "Please enter a valid coordinate: "
-        user_in = gets.chomp.upcase
-        puts ""
-      end
+      player_shot_seq(player_shot)
 
-      cpu.cells[user_in].fire_upon
-
-      @player_shots.push(user_in)
-
-      print "My shot! \n\n"
-
-
-      cpu_shot = @cpu.raw_cells_keys.sample
-
-      unless !@cpu_shots.include?(cpu_shot)
-        @player.cells[cpu_shot].fire_upon
-        @cpu_shots.push(cpu_shot)
-        print cpu_shot
-      end
+      cpu_shot_seq(cpu_shot)
 
       turn_board_render
     end
@@ -60,9 +46,9 @@ class Game
 
   def end_game
     if @p_cruiser.sunk? && @p_submarine.sunk?
-      puts "I won!"
+      print "\n*** I won! ***\n"
     else
-      puts "You won!"
+      print "\n*** You won! ***\n"
     end
   end
 
@@ -78,12 +64,8 @@ class Game
       @cpu.place(ship, coords)
     end
 
-    @cpu.render(true)
-    # logic for ship placement
-    #   gen random array
-    #     until place == true
-    #       gen random array
-    # creates and places ships on hidden board
+    @cpu.render
+
     puts "I have placed my ships on the grid"
     print "You now need to lay out your two ships.\n\n"
   end
@@ -143,10 +125,32 @@ class Game
   def turn_board_render
     print "\n=============COMPUTER BOARD=============\n\n"
 
-    cpu.render(true)
+    cpu.render
 
     print "\n==============PLAYER BOARD==============\n\n"
 
     player.render(true)
+  end
+
+  def player_shot_seq(player_shot)
+    until cpu.validate_coordinates?(player_shot) && !(@player_shots.include?(player_shot))
+      print "Please enter a valid coordinate: "
+      player_shot = gets.chomp.upcase
+      puts ""
+    end
+
+    puts "Your shot at #{player_shot}"
+    cpu.cells[player_shot].fire_upon
+    @player_shots.push(player_shot)
+  end
+
+  def cpu_shot_seq(cpu_shot)
+    until player.validate_coordinates?(cpu_shot) && !@cpu_shots.include?(cpu_shot)
+      cpu_shot = @cpu.raw_cells_keys.sample
+    end
+
+    puts "My shot at #{cpu_shot}"
+    @player.cells[cpu_shot].fire_upon
+    @cpu_shots.push(cpu_shot)
   end
 end
