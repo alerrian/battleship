@@ -158,15 +158,11 @@ class Game
   def cpu_shot_seq(cpu_shot)
     until player.validate_coordinates?(cpu_shot) && !@cpu_shots.include?(cpu_shot)
       # AI_shot sequence. "Smart AI"
-      if @player.cells[@cpu_shots.last].ship == nil || @player.cells[@cpu_shots.last].ship.sunk?
+      if @player.cells[@cpu_shots.last].ship == nil || @player.cells[@cpu_shots.last].ship.sunk? || @cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1] == nil
         # shoot at the 
         cpu_shot = @cpu.raw_cells_keys.sample
       else
-        if @cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1] == nil
-          cpu_shot = @cpu.raw_cells_keys.sample
-        else
-          cpu_shot = @cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1]
-        end
+        cpu_shot = @cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1]
       end
     end
 
