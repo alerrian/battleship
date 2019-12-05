@@ -4,9 +4,9 @@ require_relative '../lib/ship'
 class Game
   attr_reader :cpu, :player
 
-  def initialize
-    @cpu = Board.new
-    @player = Board.new
+  def initialize(game_type = "D")
+    @cpu = Board.new(game_type)
+    @player = Board.new(game_type)
     @cpu_shots = []
     @player_shots = []
   end
@@ -24,7 +24,7 @@ class Game
 
   def turn
     system("clear")
-    
+
     turn_board_render
 
     print "Enter the coordinate for your shot: "
@@ -64,7 +64,7 @@ class Game
       @cpu.place(ship, coords)
     end
 
-    @cpu.render
+    @cpu.render(true)
 
     puts "I have placed my ships on the grid"
     print "You now need to lay out your two ships.\n\n"
@@ -74,7 +74,7 @@ class Game
     print "The Cruiser is three units long and the Submarine is two units long.\n\n"
 
     # Print empty board
-    player.render
+    player.render(true)
 
     print "\nEnter the squares for the CRUISER: "
     @p_cruiser = Ship.new("Cruiser", 3)
@@ -125,7 +125,7 @@ class Game
   def turn_board_render
     print "\n=============COMPUTER BOARD=============\n\n"
 
-    cpu.render
+    cpu.render(true)
 
     print "\n==============PLAYER BOARD==============\n\n"
 

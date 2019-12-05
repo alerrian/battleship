@@ -11,8 +11,9 @@ until user_in == "p" or user_in == "q"
 end
 
 if user_in == "p"
-  # start game
-  new_game = Game.new
+  p "Would you like to play (D)efault or (T)rue Battleship"
+  user_in = gets.chomp.upcase
+  new_game = Game.new(user_in)
 
   new_game.start
 elsif user_in == "q"
