@@ -3,19 +3,25 @@ require './lib/cell'
 # Creates the board to play the game
 
 class Board
-  attr_reader :cells, :raw_cells_keys
+  attr_reader :cells, :raw_cells_keys, :game_type
 
-  def initialize
+  def initialize(game_type = "D")
+    @game_type = game_type
     @raw_cells_keys = []
-    @cells = cell_generator
+    @cells = cell_generator(game_type)
   end
 
-  def cell_generator
-    cell_range = ("A".."D").to_a
+  def cell_generator(game_type)
+    range = []
+    if game_type == "D"
+      range = ("A".."D").to_a
+    else
+      range = ("A".."J").to_a
+    end
     hash_keys = []
     cells = {}
 
-    4.times do |num|
+    range.length.times do |num|
       cell_range.each do |letter|
         hash_keys.push(letter + (num + 1).to_s)
       end
@@ -101,7 +107,7 @@ class Board
   end
 
   # :nocov:
-  def render(player = false)
+  def render(player = false, game_type)
     #This method needs to iterate through the hash of cells calling their
     #render method.  It will pass an argument of true to display player
     #ships on their board
@@ -109,7 +115,11 @@ class Board
     range = Math.sqrt(@cells.length)
     render_array = @cells.values.each_slice(range).to_a
 
-    print "  1 2 3 4 \n"
+    if game_type == "D"
+      print "  1 2 3 4 \n"
+    else
+      print "  1 2 3 4 5 6 7 8 9 10 \n"
+    end
 
     render_array.each do |row|
       print row[0].coordinate.split(//)[0] + " "
