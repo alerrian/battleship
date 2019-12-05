@@ -5,13 +5,29 @@ class Game
   attr_reader :cpu, :player
 
   def initialize(game_type = "D")
-    @cpu = Board.new(game_type)
-    @player = Board.new(game_type)
     @cpu_shots = []
     @player_shots = []
   end
 
   def start
+    p "Welcome to BATTLESHIP"
+    p "Enter p to play. Enter q to quit."
+    user_in = gets.chomp.downcase
+
+    until user_in == "p" or user_in == "q"
+      p "Please input a valid selection"
+      user_in = gets.chomp.downcase
+    end
+
+    if user_in == "p"
+      p "Would you like to play (D)efault or (T)rue Battleship"
+      game_type = gets.chomp.upcase
+      @cpu = Board.new(game_type)
+      @player = Board.new(game_type)
+    elsif user_in == "q"
+      # quit game
+      exit
+    end
     # cpu places ships on board
     cpu_placement
 
@@ -46,10 +62,12 @@ class Game
 
   def end_game
     if @p_cruiser.sunk? && @p_submarine.sunk?
-      print "\n*** I won! ***\n"
+      print "\n*** I won! ***\n\n"
     else
-      print "\n*** You won! ***\n"
+      print "\n*** You won! ***\n\n"
     end
+
+    start
   end
 
   def cpu_placement
@@ -139,9 +157,10 @@ class Game
       puts ""
     end
 
-    puts "Your shot at #{player_shot}"
     cpu.cells[player_shot].fire_upon
     @player_shots.push(player_shot)
+    print "Your " + print_shot_results(@cpu.cells[player_shot]) + "\n"
+
   end
 
   def cpu_shot_seq(cpu_shot)
@@ -149,8 +168,22 @@ class Game
       cpu_shot = @cpu.raw_cells_keys.sample
     end
 
-    puts "My shot at #{cpu_shot}"
     @player.cells[cpu_shot].fire_upon
     @cpu_shots.push(cpu_shot)
+    print "My " + print_shot_results(@player.cells[cpu_shot]) + "\n"
+
+  end
+
+  def print_shot_results(target)
+    # take a coordinate
+    #   print this coordinate
+    #   print the ship status at that coordinate
+    if target.ship == nil
+      return"shot at #{target.coordinate} was a MISS!"
+    elsif target.ship.sunk? == true
+      return "shot at #{target.coordinate} on the #{target.ship.name} hit and SUNK THE SHIP!"
+    else
+      return "shot at #{target.coordinate} on the #{target.ship.name} was a HIT!"
+    end
   end
 end
