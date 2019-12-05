@@ -35,14 +35,11 @@ class Game
     player_placement
 
     # begins the turn
+    turn_board_render
     turn
   end
 
   def turn
-    system("clear")
-
-    turn_board_render
-
     print "Enter the coordinate for your shot: "
     player_shot = gets.chomp.upcase
 
@@ -54,6 +51,7 @@ class Game
 
       cpu_shot_seq(cpu_shot)
 
+      system("clear")
       turn_board_render
     end
 
