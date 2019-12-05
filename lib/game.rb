@@ -23,7 +23,7 @@ class Game
     end
 
     if user_in == "p"
-      p "What game type would you like to play? (Q to quit)"
+      p "What game type would you like to play? (Q to quit. Game defaults to 1)"
       p "   1. Default Battleship (4x4)"
       p "   2. Big Board Battleship (9x9)"
       game_type = gets.chomp.upcase
