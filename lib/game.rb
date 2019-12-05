@@ -5,13 +5,15 @@ class Game
   attr_reader :cpu, :player
 
   def initialize
-    @cpu_shots = []
-    @player_shots = []
-    @c_cruiser = Ship.new("Cruiser", 3)
-    @c_submarine = Ship.new("Submarine", 2)
+    
   end
 
   def start
+    @c_cruiser = Ship.new("Cruiser", 3)
+    @c_submarine = Ship.new("Submarine", 2)
+    @cpu_shots = []
+    @player_shots = []
+
     p "Welcome to BATTLESHIP"
     p "Enter P to play. Enter Q to quit."
     user_in = gets.chomp.downcase
@@ -158,11 +160,16 @@ class Game
   def cpu_shot_seq(cpu_shot)
     until player.validate_coordinates?(cpu_shot) && !@cpu_shots.include?(cpu_shot)
       # AI_shot sequence. "Smart AI"
-      if @player.cells[@cpu_shots.last].ship == nil || @player.cells[@cpu_shots.last].ship.sunk? || @cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1] == nil
+      if @player.cells[@cpu_shots.last].ship == nil || @player.cells[@cpu_shots.last].ship.sunk?
         # shoot at the 
         cpu_shot = @cpu.raw_cells_keys.sample
       else
-        cpu_shot = @cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1]
+        # require 'pry'; binding.pry
+        if @cpu_shots.include?(@cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1])
+          cpu_shot = @cpu.raw_cells_keys.sample
+        else
+          cpu_shot = @cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1]
+        end
       end
     end
 
