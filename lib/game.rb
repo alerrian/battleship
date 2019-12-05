@@ -23,6 +23,8 @@ class Game
   end
 
   def turn
+    system("clear")
+    
     turn_board_render
 
     print "Enter the coordinate for your shot: "
@@ -44,9 +46,9 @@ class Game
 
   def end_game
     if @p_cruiser.sunk? && @p_submarine.sunk?
-      puts "I won!"
+      print "\n*** I won! ***\n"
     else
-      puts "You won!"
+      print "\n*** You won! ***\n"
     end
   end
 
@@ -62,11 +64,10 @@ class Game
       @cpu.place(ship, coords)
     end
 
-    @cpu.render(true)
+    @cpu.render
 
     puts "I have placed my ships on the grid"
-    print "You now need to lay out your two ships.\n"
-    print "=========================================\n\n"
+    print "You now need to lay out your two ships.\n\n"
   end
 
   def player_placement
@@ -124,7 +125,7 @@ class Game
   def turn_board_render
     print "\n=============COMPUTER BOARD=============\n\n"
 
-    cpu.render(true)
+    cpu.render
 
     print "\n==============PLAYER BOARD==============\n\n"
 
