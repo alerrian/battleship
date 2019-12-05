@@ -5,7 +5,7 @@ require './lib/cell'
 class Board
   attr_reader :cells, :raw_cells_keys, :game_type
 
-  def initialize(game_type = "D")
+  def initialize(game_type = "1")
     @game_type = game_type
     @raw_cells_keys = []
     @cells = cell_generator(game_type)
@@ -13,7 +13,7 @@ class Board
 
   def cell_generator(game_type)
     range = []
-    if game_type == "D"
+    if game_type == "1"
       range = ("A".."D").to_a
     else
       range = ("A".."I").to_a
@@ -107,7 +107,7 @@ class Board
     range = Math.sqrt(@cells.length)
     render_array = @cells.values.each_slice(range).to_a
 
-    if @game_type == "D"
+    if @game_type == "1"
       print "  1 2 3 4 \n"
     else
       print "  1 2 3 4 5 6 7 8 9 \n"
