@@ -11,7 +11,7 @@ class Board
 
   def cell_generator(game_type)
     range = []
-    if game_type == "1"
+    if game_type != 2
       range = ("A".."D").to_a
     else
       range = ("A".."I").to_a
@@ -59,20 +59,9 @@ class Board
   end
 
   def align_verified?(ship_coords)
-    horizontal_check = ship_coords.map do |letter|
-      letter.split(//)[0]
-    end
-
-    horizontal_check.uniq!
-
-    vertical_check = ship_coords.map do |letter|
-      letter.split(//)[1]
-    end
-
-    vertical_check.uniq!
-    if horizontal_check.length == 1
+    if horizontal_check(ship_coords).length == 1
       true
-    elsif vertical_check.length == 1
+    elsif vertical_check(ship_coords).length == 1
       false
     end
   end
@@ -90,7 +79,7 @@ class Board
     range = Math.sqrt(@cells.length)
     render_array = @cells.values.each_slice(range).to_a
 
-    if @game_type == "1"
+    if @game_type != "2"
       print "  1 2 3 4 \n"
     else
       print "  1 2 3 4 5 6 7 8 9 \n"
@@ -120,5 +109,21 @@ class Board
     return false if ship_coords.length != ship.ship_length
     
     true
+  end
+
+  def horizontal_check(ship_coords)
+    horizontal_check = ship_coords.map do |letter|
+      letter.split(//)[0]
+    end
+
+    horizontal_check.uniq
+  end
+
+  def vertical_check(ship_coords)
+    vertical_check = ship_coords.map do |letter|
+      letter.split(//)[1]
+    end
+
+    vertical_check.uniq
   end
 end
