@@ -4,54 +4,59 @@ require_relative '../lib/ship'
 class Game
   attr_reader :cpu, :player
 
-  def initialize(game_type = "D")
-    @cpu_shots = []
-    @player_shots = []
+  def initialize
+    
   end
 
   def start
+    @c_cruiser = Ship.new("Cruiser", 3)
+    @c_submarine = Ship.new("Submarine", 2)
+    @cpu_shots = []
+    @player_shots = []
+
     p "Welcome to BATTLESHIP"
-    p "Enter p to play. Enter q to quit."
+    p "Enter P to play. Enter Q to quit."
     user_in = gets.chomp.downcase
 
     until user_in == "p" or user_in == "q"
-      p "Please input a valid selection"
+      print "Please input a valid selection: "
       user_in = gets.chomp.downcase
+      puts ""
     end
 
     if user_in == "p"
-      p "Would you like to play (D)efault or (T)rue Battleship"
+      p "What game type would you like to play? (Q to quit. Game defaults to 1)"
+      p "   1. Default Battleship (4x4)"
+      p "   2. Big Board Battleship (9x9)"
       game_type = gets.chomp.upcase
       @cpu = Board.new(game_type)
       @player = Board.new(game_type)
-    elsif user_in == "q"
-      # quit game
+
+    elsif user_in.downcase == "q"
       exit
     end
-    # cpu places ships on board
+    
     cpu_placement
 
-    # player places ships on board
     player_placement
 
-    # begins the turn
     turn_board_render
+
     turn
   end
 
   def turn
     print "Enter the coordinate for your shot: "
     player_shot = gets.chomp.upcase
+    puts ""
 
     cpu_shot = @cpu.raw_cells_keys.sample
 
-    # run the game until either players ships are all sunk
     until (@p_cruiser.sunk? && @p_submarine.sunk?) || (@c_cruiser.sunk? && @c_submarine.sunk?)
       player_shot_seq(player_shot)
 
       cpu_shot_seq(cpu_shot)
 
-      system("clear")
       turn_board_render
     end
 
@@ -70,8 +75,6 @@ class Game
 
   def cpu_placement
     cpu_ships = []
-    @c_cruiser = Ship.new("Cruiser", 3)
-    @c_submarine = Ship.new("Submarine", 2)
     cpu_ships.push(@c_cruiser)
     cpu_ships.push(@c_submarine)
 
@@ -89,7 +92,6 @@ class Game
   def player_placement
     print "The Cruiser is three units long and the Submarine is two units long.\n\n"
 
-    # Print empty board
     player.render(true)
 
     print "\nEnter the squares for the CRUISER: "
@@ -97,8 +99,6 @@ class Game
     user_coords = gets.chomp.upcase.split
     puts ""
 
-    # take in coordinates and place them on game board.
-    # refresh board for each ship
     while player.place(@p_cruiser, user_coords) == false
       print "Please enter valid coordinates(a1 b1 c1): "
       user_coords = gets.chomp.upcase.split
@@ -112,8 +112,6 @@ class Game
     user_coords = gets.chomp.upcase.split
     puts ""
 
-    # take in coordinates and place them on game board.
-    # refresh board for each ship
     while player.place(@p_submarine, user_coords) == false
       print "Please enter valid coordinates(a1 b1 c1): "
       user_coords = gets.chomp.upcase.split
@@ -134,7 +132,6 @@ class Game
     end
 
     position_index = rand(0..(valid_coords.length - 1))
-
     valid_coords[position_index]
   end
 
@@ -157,31 +154,38 @@ class Game
 
     cpu.cells[player_shot].fire_upon
     @player_shots.push(player_shot)
-    print "Your " + print_shot_results(@cpu.cells[player_shot]) + "\n"
-
+    print "Your " + print_shot_results(@cpu.cells[player_shot]) + "\n\n"
   end
 
   def cpu_shot_seq(cpu_shot)
     until player.validate_coordinates?(cpu_shot) && !@cpu_shots.include?(cpu_shot)
-      cpu_shot = @cpu.raw_cells_keys.sample
+      # AI_shot sequence. "Smart AI"
+      if @player.cells[@cpu_shots.last].ship == nil || @player.cells[@cpu_shots.last].ship.sunk?
+        # shoot at the 
+        cpu_shot = @cpu.raw_cells_keys.sample
+      else
+        # require 'pry'; binding.pry
+        if @cpu_shots.include?(@cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1])
+          cpu_shot = @cpu.raw_cells_keys.sample
+        else
+          cpu_shot = @cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1]
+        end
+      end
     end
 
     @player.cells[cpu_shot].fire_upon
     @cpu_shots.push(cpu_shot)
     print "My " + print_shot_results(@player.cells[cpu_shot]) + "\n"
-
   end
 
   def print_shot_results(target)
-    # take a coordinate
-    #   print this coordinate
-    #   print the ship status at that coordinate
     if target.ship == nil
       return"shot at #{target.coordinate} was a MISS!"
     elsif target.ship.sunk? == true
-      return "shot at #{target.coordinate} on the #{target.ship.name} hit and SUNK THE SHIP!"
+      return "shot at #{target.coordinate} on the #{target.ship.name} was a HIT and SUNK THE SHIP!"
     else
       return "shot at #{target.coordinate} on the #{target.ship.name} was a HIT!"
     end
   end
+
 end

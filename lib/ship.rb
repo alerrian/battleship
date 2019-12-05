@@ -1,8 +1,3 @@
-# A ship class that initializes a ship and it's associated methods.
-# Methods:
-#   sunk? returns a boolean
-#   hit decrements the health of the ship then checks if the ship is sunk of not
-#     based on this health.
 class Ship
   attr_reader :name, :ship_length, :health
 
