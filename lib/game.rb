@@ -5,15 +5,16 @@ class Game
   attr_reader :cpu, :player
 
   def initialize
-    
+
   end
 
   def start
-    @c_cruiser = Ship.new("Cruiser", 3)
-    @c_submarine = Ship.new("Submarine", 2)
-    @cpu_shots = []
-    @player_shots = []
+    menus
+    turn
+    end_game
+  end
 
+  def menus
     p "Welcome to BATTLESHIP"
     p "Enter P to play. Enter Q to quit."
     user_in = gets.chomp.downcase
@@ -26,23 +27,33 @@ class Game
 
     if user_in == "p"
       p "What game type would you like to play? (Q to quit. Game defaults to 1)"
-      p "   1. Default Battleship (4x4)"
-      p "   2. Big Board Battleship (9x9)"
-      game_type = gets.chomp.upcase
-      @cpu = Board.new(game_type)
-      @player = Board.new(game_type)
-
+      p "   1. Default Battleship Board (4x4)"
+      p "   2. Custom Ships on the Big Battleship Board (9x9)"
+      game_type = gets.chomp
+      game_type = "1" if game_type != "2"
+      game_setup(game_type)
     elsif user_in.downcase == "q"
       exit
     end
-    
+  end
+
+  def game_setup(game_type)
+    @cpu_shots = []
+    @player_shots = []
+    @cpu_ships = []
+    @player_ships = []
+    @cpu = Board.new(game_type)
+    @player = Board.new(game_type)
+
+    if game_type == "2"
+      create_custom_ships
+    else
+      make_default_ships
+    end
+
     cpu_placement
-
     player_placement
-
     turn_board_render
-
-    turn
   end
 
   def turn
@@ -52,19 +63,18 @@ class Game
 
     cpu_shot = @cpu.raw_cells_keys.sample
 
-    until (@p_cruiser.sunk? && @p_submarine.sunk?) || (@c_cruiser.sunk? && @c_submarine.sunk?)
+    until ((@cpu_ships.find_all {|ship| ship.sunk? == true}).length == @cpu_ships.length) ||
+          ((@player_ships.find_all {|ship| ship.sunk? == true}).length == @player_ships.length)
       player_shot_seq(player_shot)
 
       cpu_shot_seq(cpu_shot)
 
       turn_board_render
     end
-
-    end_game
   end
 
   def end_game
-    if @p_cruiser.sunk? && @p_submarine.sunk?
+    if ((@player_ships.find_all {|ship| ship.sunk? == true}).length == @player_ships.length)
       print "\n*** I won! ***\n\n"
     else
       print "\n*** You won! ***\n\n"
@@ -74,11 +84,7 @@ class Game
   end
 
   def cpu_placement
-    cpu_ships = []
-    cpu_ships.push(@c_cruiser)
-    cpu_ships.push(@c_submarine)
-
-    cpu_ships.each do |ship|
+    @cpu_ships.each do |ship|
       coords = get_valid_positions(ship)
       @cpu.place(ship, coords)
     end
@@ -90,35 +96,18 @@ class Game
   end
 
   def player_placement
-    print "The Cruiser is three units long and the Submarine is two units long.\n\n"
-
-    player.render(true)
-
-    print "\nEnter the squares for the CRUISER: "
-    @p_cruiser = Ship.new("Cruiser", 3)
-    user_coords = gets.chomp.upcase.split
-    puts ""
-
-    while player.place(@p_cruiser, user_coords) == false
-      print "Please enter valid coordinates(a1 b1 c1): "
+    @player_ships.each do |ship|
+      player.render(true)
+      print "The #{ship.name} is #{ship.ship_length} units long.\n"
+      print "Please enter the coordinates placement.\n"
       user_coords = gets.chomp.upcase.split
-      puts ""
+      while player.place(ship, user_coords) == false
+        print "Please enter valid coordinates(a1 b1 c1): "
+        user_coords = gets.chomp.upcase.split
+        puts ""
+      end
+      player.render(true)
     end
-
-    player.render(true)
-
-    print "\nEnter the squares for the SUBMARINE: "
-    @p_submarine = Ship.new("Submarine", 2)
-    user_coords = gets.chomp.upcase.split
-    puts ""
-
-    while player.place(@p_submarine, user_coords) == false
-      print "Please enter valid coordinates(a1 b1 c1): "
-      user_coords = gets.chomp.upcase.split
-      puts ""
-    end
-
-    player.render(true)
   end
 
   def get_valid_positions(ship)
@@ -161,7 +150,7 @@ class Game
     until player.validate_coordinates?(cpu_shot) && !@cpu_shots.include?(cpu_shot)
       # AI_shot sequence. "Smart AI"
       if @player.cells[@cpu_shots.last].ship == nil || @player.cells[@cpu_shots.last].ship.sunk?
-        # shoot at the 
+        # shoot at the
         cpu_shot = @cpu.raw_cells_keys.sample
       else
         # require 'pry'; binding.pry
@@ -187,5 +176,43 @@ class Game
       return "shot at #{target.coordinate} on the #{target.ship.name} was a HIT!"
     end
   end
+
+  def create_custom_ships
+    p "How many ships would you like to make? (1 - 5)"
+    number_of_ships = gets.chomp.to_i
+    if number_of_ships > 5
+      number_of_ships = 5
+    elsif number_of_ships <= 0
+      number_of_ships = 1
+    end
+
+
+    number_of_ships.times do |num|
+      p "What would you like to call this ship?"
+      ship_name = gets.chomp.strip.downcase.capitalize
+      p "How long would you #{ship_name} to be? (1 - 9)"
+      ship_size = gets.chomp.to_i
+      if ship_size > 9
+        ship_size = 9
+      elsif ship_size <= 0
+        ship_size = 1
+      end
+      @player_ships.push(Ship.new(ship_name, ship_size))
+      @cpu_ships.push(Ship.new(ship_name, ship_size))
+    end
+  end
+
+  def make_default_ships
+    @p_cruiser = Ship.new("Cruiser", 3)
+    @p_submarine = Ship.new("Submarine", 2)
+    @player_ships.push(@p_cruiser)
+    @player_ships.push(@p_submarine)
+
+    @c_cruiser = Ship.new("Cruiser", 3)
+    @c_submarine = Ship.new("Submarine", 2)
+    @cpu_ships.push(@c_cruiser)
+    @cpu_ships.push(@c_submarine)
+  end
+
 
 end
