@@ -1,3 +1,5 @@
+require 'colorize'
+
 class Cell
   attr_reader :coordinate, :ship, :fired_upon, :symbol
 
@@ -5,7 +7,7 @@ class Cell
     @coordinate = coordinate
     @ship = nil
     @fired_upon = false
-    @symbol = "."
+    @symbol = ".".colorize(:blue)
   end
 
   def empty?
@@ -24,7 +26,7 @@ class Cell
   def fire_upon
     if ship != nil
       @ship.hit
-      @ship.sunk? == false ? (@symbol = "H") : (@symbol = "X")
+      @ship.sunk? == false ? (@symbol = "H".colorize(:red)) : (@symbol = "X".colorize(:red))
     else
       @symbol = "M"
     end
@@ -33,9 +35,9 @@ class Cell
 
   def render(player = false)
     if player == true && @ship != nil && @fired_upon == false
-      return @symbol = "S"
+      return @symbol = "S".colorize(:green)
     elsif @ship != nil && @ship.sunk? == true
-      return @symbol = "X"
+      return @symbol = "X".colorize(:red)
     end
     return @symbol
   end

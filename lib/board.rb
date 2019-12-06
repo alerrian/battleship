@@ -48,7 +48,7 @@ class Board
       start_point = @cells.keys.index(ship_coords[0])
       ship_coords == @cells.keys.slice((start_point), (ship_coords.length))
 
-    elsif !(align_verified?(ship_coords))
+    elsif align_verified?(ship_coords) == false
       start_point = @raw_cells_keys.index(ship_coords[0])
       ship_coords == @raw_cells_keys.slice((start_point), (ship_coords.length))
 
