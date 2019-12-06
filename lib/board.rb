@@ -48,10 +48,7 @@ class Board
     elsif align_verified?(ship_coords) == false
       start_point = @raw_cells_keys.index(ship_coords[0])
       ship_coords == @raw_cells_keys.slice((start_point), (ship_coords.length))
-
-    else
-      false
-
+      
     end
   end
 
