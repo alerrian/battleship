@@ -45,16 +45,16 @@ class Board
     return false if pass_valid_guards?(ship, ship_coords) == false
 
     if align_verified?(ship_coords)
-
       start_point = @cells.keys.index(ship_coords[0])
-
       ship_coords == @cells.keys.slice((start_point), (ship_coords.length))
 
-    elsif align_verified?(ship_coords) == false
+    elsif !(align_verified?(ship_coords))
       start_point = @raw_cells_keys.index(ship_coords[0])
       ship_coords == @raw_cells_keys.slice((start_point), (ship_coords.length))
+
     else
       false
+
     end
   end
 
