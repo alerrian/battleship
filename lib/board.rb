@@ -6,12 +6,12 @@ class Board
   def initialize(game_type = "1")
     @game_type = game_type
     @raw_cells_keys = []
-    @cells = cell_generator(game_type)
+    @cells = cell_generator
   end
 
-  def cell_generator(game_type)
+  def cell_generator
     range = []
-    if game_type == "1"
+    if @game_type == "1"
       range = ("A".."D").to_a
     else
       range = ("A".."I").to_a
@@ -118,7 +118,7 @@ class Board
     end
 
     return false if ship_coords.length != ship.ship_length
-    
+
     true
   end
 end
