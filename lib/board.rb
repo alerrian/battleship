@@ -10,7 +10,6 @@ class Board
   end
 
   def cell_generator(game_type)
-    range = []
     if game_type != 2
       range = ("A".."D").to_a
     else
@@ -26,9 +25,7 @@ class Board
       end
     end
 
-    hash_keys.each do |key|
-      cells[key] = Cell.new(key)
-    end
+    hash_keys.each { |key| cells[key] = Cell.new(key) }
 
     @raw_cells_keys = cells.keys
 
