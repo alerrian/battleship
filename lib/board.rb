@@ -1,4 +1,5 @@
 require './lib/cell'
+require 'colorize'
 
 class Board
   attr_reader :cells, :raw_cells_keys, :game_type
@@ -6,11 +7,11 @@ class Board
   def initialize(game_type = "1")
     @game_type = game_type
     @raw_cells_keys = []
-    @cells = cell_generator
+    @cells = cell_generator(game_type)
   end
 
   def cell_generator(game_type)
-    if game_type != 2
+    if game_type != "2"
       range = ("A".."D").to_a
     else
       range = ("A".."I").to_a
@@ -74,13 +75,13 @@ class Board
     render_array = @cells.values.each_slice(range).to_a
 
     if @game_type != "2"
-      print "  1 2 3 4 \n"
+      print "  1 2 3 4 \n".colorize(:yellow)
     else
-      print "  1 2 3 4 5 6 7 8 9 \n"
+      print "  1 2 3 4 5 6 7 8 9 \n".colorize(:yellow)
     end
 
     render_array.each do |row|
-      print row[0].coordinate.split(//)[0] + " "
+      print (row[0].coordinate.split(//)[0] + " ").colorize(:yellow)
 
       row.each do |cell|
         print cell.render(player) + " "

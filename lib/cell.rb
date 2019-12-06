@@ -26,7 +26,7 @@ class Cell
   def fire_upon
     if ship != nil
       @ship.hit
-      @ship.sunk? == false ? (@symbol = "H".colorize(:red)) : (@symbol = "X".colorize(:red))
+      @ship.sunk? == false ? @symbol = "H".colorize(:red) : @symbol = "X".colorize(:red)
     else
       @symbol = "M"
     end
