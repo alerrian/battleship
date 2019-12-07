@@ -1,5 +1,6 @@
-require_relative '../lib/board'
 require_relative '../lib/ship'
+require_relative '../lib/cpu_player'
+require_relative '../lib/player'
 
 class Game
   attr_reader :cpu, :player
@@ -38,12 +39,11 @@ class Game
   end
 
   def game_setup(game_type)
-    @cpu_shots = []
-    @player_shots = []
-    @cpu_ships = []
-    @player_ships = []
-    @cpu = Board.new(game_type)
-    @player = Board.new(game_type)
+
+    @cpu = CpuPlayer.new(game_type)
+    @player = Player.new(game_type)
+    @player.add_cpu_target(@cpu)
+    @cpu.add_player_target(@player)
 
     if game_type == "2"
       create_custom_ships
@@ -51,8 +51,11 @@ class Game
       make_default_ships
     end
 
-    cpu_placement
-    player_placement
+    @cpu.placement
+    puts "I have placed my ships on the grid"
+    print "You now need to lay out your two ships.\n\n"
+
+    @player.placement
     turn_board_render
   end
 
@@ -61,20 +64,20 @@ class Game
     player_shot = gets.chomp.upcase
     puts ""
 
-    cpu_shot = @cpu.raw_cells_keys.sample
+    cpu_shot = @cpu.board.raw_cells_keys.sample
 
-    until ((@cpu_ships.find_all {|ship| ship.sunk? == true}).length == @cpu_ships.length) ||
-          ((@player_ships.find_all {|ship| ship.sunk? == true}).length == @player_ships.length)
-      player_shot_seq(player_shot)
+    until ((@cpu.ships.find_all {|ship| ship.sunk? == true}).length == @cpu.ships.length) ||
+          ((@player.ships.find_all {|ship| ship.sunk? == true}).length == @player.ships.length)
+      print @player.shot_seq(player_shot) + print_shot_results(@cpu.board.cells[@player.shots.last]) + "\n\n"
 
-      cpu_shot_seq(cpu_shot)
+      print @cpu.shot_seq(cpu_shot) + print_shot_results(@player.board.cells[@cpu.shots.last]) + "\n"
 
       turn_board_render
     end
   end
 
   def end_game
-    if ((@player_ships.find_all {|ship| ship.sunk? == true}).length == @player_ships.length)
+    if ((@player.ships.find_all {|ship| ship.sunk? == true}).length == @player.ships.length)
       print "\n*** I won! ***\n\n"
     else
       print "\n*** You won! ***\n\n"
@@ -83,88 +86,14 @@ class Game
     start
   end
 
-  def cpu_placement
-    @cpu_ships.each do |ship|
-      coords = get_valid_positions(ship)
-      @cpu.place(ship, coords)
-    end
-
-    @cpu.render
-
-    puts "I have placed my ships on the grid"
-    print "You now need to lay out your two ships.\n\n"
-  end
-
-  def player_placement
-    @player_ships.each do |ship|
-      player.render(true)
-      print "The #{ship.name} is #{ship.ship_length} units long.\n"
-      print "Please enter the coordinates placement.\n"
-      user_coords = gets.chomp.upcase.split
-      while player.place(ship, user_coords) == false
-        print "Please enter valid coordinates(a1 b1 c1): "
-        user_coords = gets.chomp.upcase.split
-        puts ""
-      end
-      player.render(true)
-    end
-  end
-
-  def get_valid_positions(ship)
-    all_coords = @cpu.cells.keys.each_cons(ship.ship_length).to_a
-    vert_coords = @cpu.raw_cells_keys.each_cons(ship.ship_length).to_a
-    vert_coords.each do |array|
-      all_coords.push(array)
-    end
-    valid_coords = all_coords.find_all do |coord_section|
-      @cpu.valid_placement?(ship, coord_section)
-    end
-
-    position_index = rand(0..(valid_coords.length - 1))
-    valid_coords[position_index]
-  end
-
   def turn_board_render
     print "\n=============COMPUTER BOARD=============\n\n"
 
-    cpu.render
+    cpu.board.render
 
     print "\n==============PLAYER BOARD==============\n\n"
 
-    player.render(true)
-  end
-
-  def player_shot_seq(player_shot)
-    until cpu.validate_coordinates?(player_shot) && !(@player_shots.include?(player_shot))
-      print "Please enter a valid coordinate: "
-      player_shot = gets.chomp.upcase
-      puts ""
-    end
-
-    cpu.cells[player_shot].fire_upon
-    @player_shots.push(player_shot)
-    print "Your " + print_shot_results(@cpu.cells[player_shot]) + "\n\n"
-  end
-
-  def cpu_shot_seq(cpu_shot)
-    until player.validate_coordinates?(cpu_shot) && !@cpu_shots.include?(cpu_shot)
-      # AI_shot sequence. "Smart AI"
-      if @player.cells[@cpu_shots.last].ship == nil || @player.cells[@cpu_shots.last].ship.sunk?
-        # shoot at the
-        cpu_shot = @cpu.raw_cells_keys.sample
-      else
-        # require 'pry'; binding.pry
-        if @cpu_shots.include?(@cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1])
-          cpu_shot = @cpu.raw_cells_keys.sample
-        else
-          cpu_shot = @cpu.raw_cells_keys[@cpu.raw_cells_keys.index(@cpu_shots.last) + 1]
-        end
-      end
-    end
-
-    @player.cells[cpu_shot].fire_upon
-    @cpu_shots.push(cpu_shot)
-    print "My " + print_shot_results(@player.cells[cpu_shot]) + "\n"
+    player.board.render(true)
   end
 
   def print_shot_results(target)
@@ -193,22 +122,21 @@ class Game
       ship_size = 9 if ship_size > 9
       ship_size = 1 if ship_size <= 0
 
-      @player_ships.push(Ship.new(ship_name, ship_size))
-      @cpu_ships.push(Ship.new(ship_name, ship_size))
+      @player.add_ships(Ship.new(ship_name, ship_size))
+      @cpu.add_ships(Ship.new(ship_name, ship_size))
     end
   end
 
   def make_default_ships
     @p_cruiser = Ship.new("Cruiser", 3)
     @p_submarine = Ship.new("Submarine", 2)
-    @player_ships.push(@p_cruiser)
-    @player_ships.push(@p_submarine)
+    @player.add_ships(@p_cruiser)
+    @player.add_ships(@p_submarine)
 
     @c_cruiser = Ship.new("Cruiser", 3)
     @c_submarine = Ship.new("Submarine", 2)
-    @cpu_ships.push(@c_cruiser)
-    @cpu_ships.push(@c_submarine)
+    @cpu.add_ships(@c_cruiser)
+    @cpu.add_ships(@c_submarine)
   end
-
 
 end
