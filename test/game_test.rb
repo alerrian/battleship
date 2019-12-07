@@ -9,10 +9,12 @@ class GameTest < Minitest::Test
   end
 
   def test_it_exists
+    skip
     assert_instance_of Game, @new_game
   end
 
   def test_cpu_has_valid_placements
+    skip
     cruiser = Ship.new("Cruiser", 3)
     submarine = Ship.new("Submarine", 2)
 
@@ -24,6 +26,7 @@ class GameTest < Minitest::Test
   end
 
   def test_cpu_can_place_its_ships_without_error
+    skip
     assert_nil  @new_game.cpu_placement
   end
 
