@@ -89,7 +89,7 @@ class Game
       @cpu.place(ship, coords)
     end
 
-    @cpu.render(true)
+    @cpu.render
 
     puts "I have placed my ships on the grid"
     print "You now need to lay out your two ships.\n\n"
@@ -127,7 +127,7 @@ class Game
   def turn_board_render
     print "\n=============COMPUTER BOARD=============\n\n"
 
-    cpu.render(true)
+    cpu.render
 
     print "\n==============PLAYER BOARD==============\n\n"
 
@@ -180,23 +180,19 @@ class Game
   def create_custom_ships
     p "How many ships would you like to make? (1 - 5)"
     number_of_ships = gets.chomp.to_i
-    if number_of_ships > 5
-      number_of_ships = 5
-    elsif number_of_ships <= 0
-      number_of_ships = 1
-    end
 
+    number_of_ships = 5 if number_of_ships > 5
+    number_of_ships = 1 if number_of_ships <= 0
 
     number_of_ships.times do |num|
       p "What would you like to call this ship?"
       ship_name = gets.chomp.strip.downcase.capitalize
       p "How long would you #{ship_name} to be? (1 - 9)"
       ship_size = gets.chomp.to_i
-      if ship_size > 9
-        ship_size = 9
-      elsif ship_size <= 0
-        ship_size = 1
-      end
+
+      ship_size = 9 if ship_size > 9
+      ship_size = 1 if ship_size <= 0
+
       @player_ships.push(Ship.new(ship_name, ship_size))
       @cpu_ships.push(Ship.new(ship_name, ship_size))
     end
