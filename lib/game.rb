@@ -89,7 +89,7 @@ class Game
       @cpu.place(ship, coords)
     end
 
-    @cpu.render(true)
+    @cpu.render
 
     puts "I have placed my ships on the grid"
     print "You now need to lay out your two ships.\n\n"
@@ -127,7 +127,7 @@ class Game
   def turn_board_render
     print "\n=============COMPUTER BOARD=============\n\n"
 
-    cpu.render(true)
+    cpu.render
 
     print "\n==============PLAYER BOARD==============\n\n"
 
@@ -189,7 +189,7 @@ class Game
       ship_name = gets.chomp.strip.downcase.capitalize
       p "How long would you #{ship_name} to be? (1 - 9)"
       ship_size = gets.chomp.to_i
-      
+
       ship_size = 9 if ship_size > 9
       ship_size = 1 if ship_size <= 0
 
