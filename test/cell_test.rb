@@ -1,3 +1,4 @@
+require "colorize"
 require_relative 'test_helper'
 require_relative '../lib/cell'
 require_relative "../lib/ship"
@@ -40,18 +41,18 @@ class CellTest < MiniTest::Test
   end
 
   def test_cell_ship_render_empty_hit_sunk
-    assert_equal ".", @cell.render
+    assert_equal ".".colorize(:blue), @cell.render
 
     @cell.place_ship(@cruiser)
 
     @cell.fire_upon
 
-    assert_equal "H", @cell.render
+    assert_equal "H".colorize(:red), @cell.render
 
     @cell.fire_upon
     @cell.fire_upon
 
-    assert_equal "X", @cell.render
+    assert_equal "X".colorize(:red), @cell.render
     assert_equal true, @cell.ship.sunk?
   end
 
@@ -62,13 +63,13 @@ class CellTest < MiniTest::Test
   end
 
   def test_cell_will_show_ship_if_true
-    assert_equal ".", @cell.render
+    assert_equal ".".colorize(:blue), @cell.render
     @cell.place_ship(@cruiser)
-    assert_equal "S", @cell.render(true)
+    assert_equal "S".colorize(:green), @cell.render(true)
 
     @cell.fire_upon
 
-    assert_equal "H", @cell.render
+    assert_equal "H".colorize(:red), @cell.render
 
   end
 end
