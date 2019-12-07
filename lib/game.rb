@@ -16,8 +16,6 @@ class Game
   end
 
   def menus
-    p "Welcome to BATTLESHIP"
-    p "Enter P to play. Enter Q to quit."
     print "Welcome to BATTLESHIP\n".colorize(:yellow)
     print "Enter " + "P".colorize(:yellow) + " to play. Enter " + "Q".colorize(:yellow)+ " to quit.\n"
     user_in = gets.chomp.downcase
@@ -29,9 +27,6 @@ class Game
     end
 
     if user_in == "p"
-      p "What game type would you like to play? (Q to quit. Game defaults to 1)"
-      p "   1. Default Battleship Board (4x4)"
-      p "   2. Custom Ships on the Big Battleship Board (9x9)"
       p "What game type would you like to play? (Game defaults to 1)"
       print "   1. ".colorize(:yellow) +"Default Battleship Board (4x4)\n"
       print "   2. ".colorize(:yellow) + "Custom Ships on the Big Battleship Board (9x9)\n"
