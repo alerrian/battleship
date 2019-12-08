@@ -33,8 +33,8 @@ class Player
       user_coords = gets.chomp.upcase.split
       
       while @board.place(ship, user_coords) == false
-        # print "Please enter valid coordinates(a1 b1 c1): "
         player_invalid_coords_prompt(ship.name, user_coords)
+        # print "Please enter valid coordinates(a1 b1 c1): "
         user_coords = gets.chomp.upcase.split
         puts ""
       end
@@ -46,8 +46,8 @@ class Player
 
   def shot_seq(player_shot)
     until @cpu.board.validate_coordinates?(player_shot) && !(@shots.include?(player_shot))
+      player_invalid_shot_coord
       # print "Please enter a valid coordinate: "
-      player_invalid_shot_coord(player_shot)
       player_shot = gets.chomp.upcase
       puts ""
     end

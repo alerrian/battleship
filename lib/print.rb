@@ -15,8 +15,7 @@ module Print
     print "You placed your #{ship} at #{user_coords}.\n\n"
   end
 
-  def player_invalid_shot_coord(user_coords)
-    print "Your shot at #{user_coords} was invalid.\n"
-    print "Please take another shot: "
+  def player_invalid_shot_coord
+    print "Please enter a valid coordinate: "
   end
 end
