@@ -5,6 +5,7 @@ require_relative '../lib/player'
 class Game
   attr_reader :cpu, :player
 
+  # :nocov:
   def initialize
 
   end
@@ -14,6 +15,7 @@ class Game
     turn
     end_game
   end
+
 
   def menus
     print "Welcome to BATTLESHIP\n".colorize(:yellow)
@@ -127,6 +129,7 @@ class Game
     end
   end
 
+
   def make_default_ships
     @p_cruiser = Ship.new("Cruiser", 3)
     @p_submarine = Ship.new("Submarine", 2)
@@ -139,4 +142,5 @@ class Game
     @cpu.add_ships(@c_submarine)
   end
 
+    # :nocov:
 end

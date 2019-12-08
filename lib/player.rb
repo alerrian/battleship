@@ -24,6 +24,8 @@ class Player
     @ships.push(ship)
   end
 
+  # :nocov:
+  # User input so not tested
   def placement
     @ships.each do |ship|
       @board.render(true)
@@ -31,7 +33,7 @@ class Player
       # print "The #{ship.name} is #{ship.ship_length} units long.\n"
       # print "Please enter the coordinates placement.\n"
       user_coords = gets.chomp.upcase.split
-      
+
       while @board.place(ship, user_coords) == false
         player_invalid_coords_prompt(ship.name, user_coords)
         # print "Please enter valid coordinates(a1 b1 c1): "
@@ -56,5 +58,6 @@ class Player
     @shots.push(player_shot)
     "Your "
   end
+  # :nocov:
 
 end
