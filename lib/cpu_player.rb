@@ -49,18 +49,7 @@ class CpuPlayer
 
   def shot_seq(cpu_shot)
     until @player.board.validate_coordinates?(cpu_shot) && !@shots.include?(cpu_shot)
-      # AI_shot sequence. "Smart AI"
-      if @player.board.cells[@shots.last].ship == nil || @player.board.cells[@shots.last].ship.sunk?
-        # shoot at the
         cpu_shot = @board.raw_cells_keys.sample
-      else
-        # require 'pry'; binding.pry
-        if @shots.include?(@board.raw_cells_keys[@board.raw_cells_keys.index(@shots.last) + 1])
-          cpu_shot = @board.raw_cells_keys.sample
-        else
-          cpu_shot = @board.raw_cells_keys[@board.raw_cells_keys.index(@shots.last) + 1]
-        end
-      end
     end
 
     @player.board.cells[cpu_shot].fire_upon

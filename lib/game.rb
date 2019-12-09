@@ -43,7 +43,7 @@ class Game
 
   def turn(game_type)
     print "Enter the coordinate for your shot: "
-    player_shot = gets.chomp.upcase
+    player_shot = gets.chomp.strip.upcase
     puts ""
 
     cpu_shot = @cpu.board.raw_cells_keys.sample

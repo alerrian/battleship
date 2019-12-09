@@ -73,25 +73,5 @@ class CpuPlayerTest < MiniTest::Test
     assert_equal true, @player.board.cells[cpu_shot].fired_upon
   end
 
-  def test_it_will_make_verticle_shot_guess_after_hit
-    @p_cruiser = Ship.new("Cruiser", 3)
-    @p_submarine = Ship.new("Submarine", 2)
-    @cpu.add_player_target(@player)
-
-    @player.board.place(@p_cruiser, ["A1","A2","A3"])
-    @player.board.place(@p_submarine, ["B1", "B2"])
-
-    cpu_shot = "A1"
-
-    @cpu.shot_seq(cpu_shot)
-
-    #Second Shot after a hit will be the next vertical cell
-
-    @cpu.shot_seq(cpu_shot)
-
-    assert_equal "B1", @cpu.shots.last
-
-  end
-
 
 end
