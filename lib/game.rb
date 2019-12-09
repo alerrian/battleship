@@ -1,8 +1,11 @@
 require_relative '../lib/ship'
 require_relative '../lib/cpu_player'
 require_relative '../lib/player'
+require_relative '../lib/print'
 
 class Game
+  include Print
+
   attr_reader :cpu, :player
 
   # :nocov:
@@ -16,29 +19,6 @@ class Game
     end_game
   end
 
-
-  def menus
-    print "Welcome to BATTLESHIP\n".colorize(:yellow)
-    print "Enter " + "P".colorize(:yellow) + " to play. Enter " + "Q".colorize(:yellow)+ " to quit.\n"
-    user_in = gets.chomp.downcase
-
-    until user_in == "p" or user_in == "q"
-      print "Please input a valid selection: "
-      user_in = gets.chomp.downcase
-      puts ""
-    end
-
-    if user_in == "p"
-      p "What game type would you like to play? (Game defaults to 1)"
-      print "   1. ".colorize(:yellow) +"Default Battleship Board (4x4)\n"
-      print "   2. ".colorize(:yellow) + "Custom Ships on the Big Battleship Board (9x9)\n"
-      game_type = gets.chomp
-      game_type = "1" if game_type != "2"
-      game_setup(game_type)
-    elsif user_in.downcase == "q"
-      exit
-    end
-  end
 
   def game_setup(game_type)
 
