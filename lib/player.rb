@@ -30,14 +30,12 @@ class Player
     @ships.each do |ship|
       @board.render(true)
       player_ship_print(ship.name, ship.ship_length)
-      # print "The #{ship.name} is #{ship.ship_length} units long.\n"
-      # print "Please enter the coordinates placement.\n"
-      user_coords = gets.chomp.upcase.split
+
+      user_coords = gets.chomp.upcase.strip.split
 
       while @board.place(ship, user_coords) == false
         player_invalid_coords_prompt(ship.name, user_coords)
-        # print "Please enter valid coordinates(a1 b1 c1): "
-        user_coords = gets.chomp.upcase.split
+        user_coords = gets.chomp.upcase.strip.split
         puts ""
       end
 
@@ -49,8 +47,7 @@ class Player
   def shot_seq(player_shot)
     until @cpu.board.validate_coordinates?(player_shot) && !(@shots.include?(player_shot))
       player_invalid_shot_coord
-      # print "Please enter a valid coordinate: "
-      player_shot = gets.chomp.upcase
+      player_shot = gets.chomp.strip.upcase
       puts ""
     end
 

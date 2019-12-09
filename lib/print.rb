@@ -26,7 +26,7 @@ module Print
 
     until user_in == "p" or user_in == "q"
       print "Please input a valid selection: "
-      user_in = gets.chomp.downcase
+      user_in = gets.chomp.strip.downcase
       puts ""
     end
 
@@ -34,7 +34,7 @@ module Print
       p "What game type would you like to play? (Game defaults to 1)"
       print "   1. ".colorize(:yellow) +"Default Battleship Board (4x4)\n"
       print "   2. ".colorize(:yellow) + "Custom Ships on the Big Battleship Board (9x9)\n"
-      game_type = gets.chomp
+      game_type = gets.chomp.strip
       game_type = "1" if game_type != "2"
       game_setup(game_type)
     elsif user_in.downcase == "q"
