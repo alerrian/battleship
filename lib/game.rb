@@ -12,7 +12,6 @@ class Game
 
   def start
     menus
-    turn
     end_game
   end
 
@@ -59,9 +58,10 @@ class Game
 
     @player.placement
     turn_board_render
+    turn(game_type)
   end
 
-  def turn
+  def turn(game_type)
     print "Enter the coordinate for your shot: "
     player_shot = gets.chomp.upcase
     puts ""
@@ -71,8 +71,11 @@ class Game
     until ((@cpu.ships.find_all {|ship| ship.sunk? == true}).length == @cpu.ships.length) ||
           ((@player.ships.find_all {|ship| ship.sunk? == true}).length == @player.ships.length)
       print @player.shot_seq(player_shot) + print_shot_results(@cpu.board.cells[@player.shots.last]) + "\n\n"
-
-      print @cpu.shot_seq(cpu_shot) + print_shot_results(@player.board.cells[@cpu.shots.last]) + "\n"
+      if game_type == "1"
+        print @cpu.shot_seq(cpu_shot) + print_shot_results(@player.board.cells[@cpu.shots.last]) + "\n"
+      else
+        print @cpu.adv_cpu_shot_seq(cpu_shot) + print_shot_results(@player.board.cells[@cpu.shots.last]) + "\n"
+      end
 
       turn_board_render
     end

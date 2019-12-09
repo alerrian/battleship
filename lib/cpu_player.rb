@@ -5,13 +5,15 @@ class CpuPlayer
               :ai_level,
               :ships,
               :shots,
-              :player
+              :player,
+              :possible_shots
 
   def initialize(game_type)
     @board = Board.new(game_type)
     @ships = []
     @shots = []
     @player = nil
+    @possible_shots = []
   end
 
   def add_player_target(player)
@@ -57,6 +59,51 @@ class CpuPlayer
           cpu_shot = @board.raw_cells_keys.sample
         else
           cpu_shot = @board.raw_cells_keys[@board.raw_cells_keys.index(@shots.last) + 1]
+        end
+      end
+    end
+
+    @player.board.cells[cpu_shot].fire_upon
+    @shots.push(cpu_shot)
+    "My "
+  end
+
+  def get_adv_ai_shot_coords(cpu_shot)
+    all_coords = @board.cells.keys.each_cons(2).to_a
+    vert_coords = @board.raw_cells_keys.each_cons(2).to_a
+    vert_coords.each do |array|
+      all_coords.push(array)
+    end
+    # require "pry"; binding.pry
+    valid_predictions = all_coords.find_all do |coords|
+      coords.include?(cpu_shot)
+    end
+
+    valid_predictions.flatten!.uniq!
+
+    valid_shots = valid_predictions.find_all do |coords|
+      !(@shots.include?(coords))
+    end
+    valid_shots
+  end
+
+  def adv_cpu_shot_seq(cpu_shot)
+    until @player.board.validate_coordinates?(cpu_shot) && !@shots.include?(cpu_shot)
+      # AI_shot sequence. "Smart AI"
+      if @player.board.cells[@shots.last].ship == nil && @possible_shots == []
+        # shoot at the
+        cpu_shot = @board.raw_cells_keys.sample
+      else
+        if @player.board.cells[@shots.last].ship == nil
+          cpu_shot = @possible_shots.shuffle.pop
+        elsif @player.board.cells[@shots.last].ship != nil
+          if @player.board.cells[@shots.last].ship.sunk?
+            @possible_shots = Array.new
+            cpu_shot = @board.raw_cells_keys.sample
+          else
+            @possible_shots.push(get_adv_ai_shot_coords(@shots.last)).flatten!.uniq!
+            cpu_shot = @possible_shots.shuffle.pop
+          end
         end
       end
     end
