@@ -1,4 +1,6 @@
 # A module that can be used in other classes as a way to clean up some other methods.
+# :nocov:
+#No coverage because console printout
 module Print
 
   def player_ship_print(ship, ship_length)
@@ -42,3 +44,5 @@ module Print
     end
   end
 end
+
+# :nocov:

@@ -76,6 +76,8 @@ class CpuPlayer
     valid_shots
   end
 
+  # :nocov:
+  # No coverage due to random results
   def adv_cpu_shot_seq(cpu_shot)
     until @player.board.validate_coordinates?(cpu_shot) && !@shots.include?(cpu_shot)
       # AI_shot sequence. "Smart AI"
@@ -101,5 +103,6 @@ class CpuPlayer
     @shots.push(cpu_shot)
     "My "
   end
+  # :nocov:
 
 end

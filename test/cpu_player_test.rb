@@ -27,7 +27,7 @@ class CpuPlayerTest < MiniTest::Test
     assert_nil @cpu.player
   end
 
-  def test_it_can_take_a_player_as_oppent
+  def test_it_can_take_a_player_as_opponent
     @cpu.add_player_target(@player)
 
     assert_instance_of Player, @cpu.player
@@ -71,6 +71,14 @@ class CpuPlayerTest < MiniTest::Test
 
     assert_includes @cpu.shots, cpu_shot
     assert_equal true, @player.board.cells[cpu_shot].fired_upon
+  end
+
+  def test_it_can_make_smart_target_decisions_based_on_last_shot
+    @cpu.add_player_target(@player)
+    @player.board.place(@p_submarine, ["B1", "B2", "B3"])
+    cpu_shot = "B2"
+
+    assert_equal ["B1", "B2", "B3", "A2", "C2"], @cpu.get_adv_ai_shot_coords(cpu_shot)
   end
 
 
