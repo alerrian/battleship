@@ -1,3 +1,4 @@
+require 'colorize'
 require_relative '../lib/ship'
 require_relative '../lib/cpu_player'
 require_relative '../lib/player'
@@ -83,11 +84,11 @@ class Game
 
   def print_shot_results(target)
     if target.ship == nil
-      return"shot at #{target.coordinate} was a MISS!"
+      return"shot at " + "#{target.coordinate}".colorize(:yellow) + " was a " + "MISS!".colorize(:yellow)
     elsif target.ship.sunk? == true
-      return "shot at #{target.coordinate} on the #{target.ship.name} was a HIT and SUNK THE SHIP!"
+      return "shot at " + "#{target.coordinate}".colorize(:yellow) + " on the #{target.ship.name} was a " + "HIT and SUNK THE SHIP!".colorize(:red)
     else
-      return "shot at #{target.coordinate} on the #{target.ship.name} was a HIT!"
+      return "shot at " + "#{target.coordinate}".colorize(:yellow) + " on the #{target.ship.name} was a " + "HIT!".colorize(:red)
     end
   end
 
@@ -99,19 +100,22 @@ class Game
     number_of_ships = 1 if number_of_ships <= 0
 
     number_of_ships.times do |num|
-      p "What would you like to call this ship?"
-      ship_name = gets.chomp.strip.downcase.capitalize
-      p "How long would you #{ship_name} to be? (1 - 9)"
-      ship_size = gets.chomp.to_i
+      ship_info = []
+      until ship_info.length == 2
+        p "#{num + 1} - Create your ship with name and size (ex. Name, Size : 1 - 9)?"
+        ship_info = gets.chomp.strip.split(",")
+      end
 
-      ship_size = 9 if ship_size > 9
-      ship_size = 1 if ship_size <= 0
+      ship_info[0] = ship_info[0].strip.downcase.capitalize
+      ship_info[1] = ship_info[1].strip.to_i
 
-      @player.add_ships(Ship.new(ship_name, ship_size))
-      @cpu.add_ships(Ship.new(ship_name, ship_size))
+      ship_info[1] = 9 if ship_info[1] > 9
+      ship_info[1] = 1 if ship_info[1] <= 0
+
+      @player.add_ships(Ship.new(ship_info[0], ship_info[1]))
+      @cpu.add_ships(Ship.new(ship_info[0], ship_info[1]))
     end
   end
-
 
   def make_default_ships
     @p_cruiser = Ship.new("Cruiser", 3)
@@ -124,6 +128,5 @@ class Game
     @cpu.add_ships(@c_cruiser)
     @cpu.add_ships(@c_submarine)
   end
-
     # :nocov:
 end
