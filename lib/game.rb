@@ -84,7 +84,7 @@ class Game
 
   def print_shot_results(target)
     if target.ship == nil
-      return"shot at " + "#{target.coordinate}".colorize(:yellow) + " was a " + "MISS!".colorize(:yellow)
+      return "shot at " + "#{target.coordinate}".colorize(:yellow) + " was a " + "MISS!".colorize(:yellow)
     elsif target.ship.sunk? == true
       return "shot at " + "#{target.coordinate}".colorize(:yellow) + " on the #{target.ship.name} was a " + "HIT and SUNK THE SHIP!".colorize(:red)
     else
