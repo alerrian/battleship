@@ -29,8 +29,6 @@ class CpuPlayer
       coords = get_valid_positions(ship)
       @board.place(ship, coords)
     end
-
-    # @board.render
   end
 
   def get_valid_positions(ship)
@@ -60,10 +58,9 @@ class CpuPlayer
   def get_adv_ai_shot_coords(cpu_shot)
     all_coords = @board.cells.keys.each_cons(2).to_a
     vert_coords = @board.raw_cells_keys.each_cons(2).to_a
-    vert_coords.each do |array|
-      all_coords.push(array)
-    end
-    # require "pry"; binding.pry
+    
+    vert_coords.each { |array| all_coords.push(array) }
+    
     valid_predictions = all_coords.find_all do |coords|
       coords.include?(cpu_shot)
     end
@@ -80,9 +77,7 @@ class CpuPlayer
   # No coverage due to random results
   def adv_cpu_shot_seq(cpu_shot)
     until @player.board.validate_coordinates?(cpu_shot) && !@shots.include?(cpu_shot)
-      # AI_shot sequence. "Smart AI"
       if @player.board.cells[@shots.last].ship == nil && @possible_shots == []
-        # shoot at the
         cpu_shot = @board.raw_cells_keys.sample
       else
         if @player.board.cells[@shots.last].ship == nil
@@ -104,5 +99,4 @@ class CpuPlayer
     "My "
   end
   # :nocov:
-
 end

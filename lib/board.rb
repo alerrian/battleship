@@ -11,22 +11,11 @@ class Board
   end
 
   def cell_generator(game_type)
-    if game_type != "2"
-      range = ("A".."D").to_a
-    else
-      range = ("A".."I").to_a
-    end
+    (game_type != "2") ? (range = ("A".."D").to_a) : (range = ("A".."I").to_a)
 
-    hash_keys = []
     cells = {}
 
-    range.length.times do |num|
-      range.each do |letter|
-        hash_keys.push(letter + (num + 1).to_s)
-      end
-    end
-
-    hash_keys.each { |key| cells[key] = Cell.new(key) }
+    create_cell_names(range).each { |key| cells[key] = Cell.new(key) }
 
     @raw_cells_keys = cells.keys
 
@@ -42,17 +31,7 @@ class Board
   def valid_placement?(ship, ship_coords)
     return false if pass_valid_guards?(ship, ship_coords) == false
 
-    if align_verified?(ship_coords)
-      start_point = @cells.keys.index(ship_coords[0])
-      ship_coords == @cells.keys.slice((start_point), (ship_coords.length))
-
-    elsif align_verified?(ship_coords) == false
-      start_point = @raw_cells_keys.index(ship_coords[0])
-      ship_coords == @raw_cells_keys.slice((start_point), (ship_coords.length))
-
-    else
-      false
-    end
+    check_alignment?(ship_coords)
   end
 
   def align_verified?(ship_coords)
@@ -66,9 +45,7 @@ class Board
   def place(ship, ship_coords)
     return false if valid_placement?(ship, ship_coords) == false
 
-    ship_coords.each do |coord|
-      @cells[coord].place_ship(ship)
-    end
+    ship_coords.each { |coord| @cells[coord].place_ship(ship) }
   end
 
   # :nocov:
@@ -82,15 +59,7 @@ class Board
       print "  1 2 3 4 5 6 7 8 9 \n".colorize(:yellow)
     end
 
-    render_array.each do |row|
-      print (row[0].coordinate.split(//)[0] + " ").colorize(:yellow)
-
-      row.each do |cell|
-        print cell.render(player) + " "
-      end
-
-      print "\n"
-    end
+    render_array(render_array, player)
   end
   # :nocov:
 
@@ -122,5 +91,43 @@ class Board
     end
 
     vertical_check.uniq
+  end
+
+  # :nocov:
+  def render_array(render_array, player)
+    render_array.each do |row|
+      print (row[0].coordinate.split(//)[0] + " ").colorize(:yellow)
+  
+      row.each { |cell| print cell.render(player) + " " }
+  
+      print "\n"
+    end
+  end
+  # :nocov:
+
+  def check_alignment?(ship_coords)
+    if align_verified?(ship_coords)
+      start_point = @cells.keys.index(ship_coords[0])
+      ship_coords == @cells.keys.slice((start_point), (ship_coords.length))
+
+    elsif align_verified?(ship_coords) == false
+      start_point = @raw_cells_keys.index(ship_coords[0])
+      ship_coords == @raw_cells_keys.slice((start_point), (ship_coords.length))
+
+    else
+      false
+    end
+  end
+
+  def create_cell_names(range)
+    hash_keys = []
+
+    range.length.times do |num|
+      range.each do |letter|
+        hash_keys.push(letter + (num + 1).to_s)
+      end
+    end
+
+    return hash_keys
   end
 end
