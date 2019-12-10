@@ -21,21 +21,15 @@ class Game
 
 
   def game_setup(game_type)
-
     @cpu = CpuPlayer.new(game_type)
     @player = Player.new(game_type)
     @player.add_cpu_target(@cpu)
     @cpu.add_player_target(@player)
 
-    if game_type == "2"
-      create_custom_ships
-    else
-      make_default_ships
-    end
+    game_type == "2" ? create_custom_ships : make_default_ships
 
     @cpu.placement
-    puts "I have placed my ships on the grid"
-    print "You now need to lay out your two ships.\n\n"
+    cpu_confirm_placement
 
     @player.placement
     turn_board_render

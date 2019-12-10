@@ -43,6 +43,11 @@ module Print
       exit
     end
   end
+
+  def cpu_confirm_placement
+    puts "I have placed my ships on the grid"
+    print "You now need to lay out your two ships.\n\n"
+  end
 end
 
 # :nocov:
