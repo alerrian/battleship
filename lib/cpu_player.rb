@@ -31,13 +31,15 @@ class CpuPlayer
     end
   end
 
+  def get_coords(length)
+    all_coords = @board.cells.keys.each_cons(length).to_a
+    vert_coords = @board.raw_cells_keys.each_cons(length).to_a
+    vert_coords.each { |array| all_coords.push(array) }
+    all_coords
+  end
+
   def get_valid_positions(ship)
-    all_coords = @board.cells.keys.each_cons(ship.ship_length).to_a
-    vert_coords = @board.raw_cells_keys.each_cons(ship.ship_length).to_a
-    vert_coords.each do |array|
-      all_coords.push(array)
-    end
-    valid_coords = all_coords.find_all do |coord_section|
+    valid_coords = get_coords(ship.ship_length).find_all do |coord_section|
       @board.valid_placement?(ship, coord_section)
     end
 
@@ -56,20 +58,13 @@ class CpuPlayer
   end
 
   def get_adv_ai_shot_coords(cpu_shot)
-    all_coords = @board.cells.keys.each_cons(2).to_a
-    vert_coords = @board.raw_cells_keys.each_cons(2).to_a
-    
-    vert_coords.each { |array| all_coords.push(array) }
-    
-    valid_predictions = all_coords.find_all do |coords|
+    shot_options = get_coords(2).find_all do |coords|
       coords.include?(cpu_shot)
     end
 
-    valid_predictions.flatten!.uniq!
+    shot_options.flatten!.uniq!
 
-    valid_shots = valid_predictions.find_all do |coords|
-      !(@shots.include?(coords))
-    end
+    valid_shots = shot_options.find_all { |coords| !(@shots.include?(coords)) }
     valid_shots
   end
 
